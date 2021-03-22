@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer v-model="input" class="green darken-1" app bottom absolute>
+  <v-navigation-drawer v-model="input" absolute temporary class="green darken-1" >
     <template v-slot:prepend>
       <div
         class="d-flex flex-column align-center text-h3 font-weight-thin ma-3"
@@ -16,7 +16,7 @@ export default {
 
   data() {
     return {
-      input: null
+      input: false
     }
   },
 

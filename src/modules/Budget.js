@@ -15,6 +15,7 @@ export class Budget {
       new Category("Health"),
       new Category("Insurance"),
       new Category("Debt"),
-    ]
+    ],
+    this.active = true
   }
 }
