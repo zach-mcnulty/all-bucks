@@ -28,14 +28,14 @@ export default {
       let lineItems = this.budget.categories
         .map((c) => c.lineItems).flat();
 
-      return lineItems.reduce((a, b) => a + b, 0);
+      return lineItems.reduce((a, b) => a + b.budgeted, 0);
     },
     spent() {
       let expenditures = this.budget.categories
         .map(c => c.lineItems).flat()
         .map(l => l.expenditures).flat();
 
-      return expenditures.reduce((a, b) => a + b, 0);
+      return expenditures.reduce((a, b) => a + b.spent, 0);
     }
   },
 };
