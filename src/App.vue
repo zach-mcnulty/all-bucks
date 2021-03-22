@@ -1,28 +1,45 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <v-app
+    v-touch="{
+      up: () => (drawer = true),
+    }"
+  >
+    <drawer :value="drawer" @input="toggleDrawer"></drawer>
+
+    <v-main>
+      <v-container>
+        <!-- Header -->
+        <v-row class="d-flex space-between"> 
+          <v-col>Hello</v-col>
+          <v-col>There</v-col>
+          <v-col>World</v-col>
+        </v-row>
+      </v-container>
+    </v-main>
+    
+  </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { Budget } from './modules/Budget.js';
+import Drawer from "./components/Drawer.vue";
 
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
-</script>
+  name: "All_Bucks",
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+  components: {
+    Drawer,
+  },
+
+  data: () => ({
+    drawer: null,
+    budgets: [new Budget]
+  }),
+
+  methods: {
+    toggleDrawer(input) {
+      this.drawer = input;
+    },
+  },
+};
+</script>
