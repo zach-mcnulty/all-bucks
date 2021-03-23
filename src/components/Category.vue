@@ -42,7 +42,7 @@ export default {
 
   methods: {
     newLineItem(category) {
-      return category.lineItems.push({ label: "Test", budgeted: 20 });
+      return category.lineItems.push({ label: "Test", budgeted: 10 });
     },
   },
 };
