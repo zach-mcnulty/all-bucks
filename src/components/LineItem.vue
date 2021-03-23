@@ -1,18 +1,14 @@
 <template>
   <v-container fluid class="pa-0">
-    <v-row v-for="(lineItem, i) in lineItems" :key="i">
-      <v-col :is="test" @click="editLabel = true" style="width: 50%">{{
-        lineItem.label
-      }}</v-col>
-
-      <v-col
-        v-if="lineItem.budgeted !== null"
-        class="d-flex justify-end"
-        style="width: 50%"
-        >{{ lineItem.budgeted }}</v-col
-      >
-
+    <v-row v-if="lineItem.label && lineItem.budgeted !== null">
+      <v-col>{{ lineItem.label }}</v-col>
+      <v-col class="d-flex justify-end">{{ lineItem.budgeted }}</v-col>
       <v-progress-linear></v-progress-linear>
+    </v-row>
+    <v-row v-else>
+      <v-col>
+        <edit-form></edit-form>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -21,7 +17,7 @@
 import EditForm from "./EditForm.vue";
 
 export default {
-  props: ["lineItems"],
+  props: ["lineItem"],
 
   components: {
     EditForm,
@@ -38,11 +34,11 @@ export default {
   computed: {
     test() {
       if (this.editLabel) {
-        return 'EditForm';
+        return "EditForm";
       } else {
-        return 'v-col';
+        return "v-col";
       }
-    }
+    },
   },
 
   methods: {

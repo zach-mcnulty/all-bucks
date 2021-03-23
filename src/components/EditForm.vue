@@ -1,11 +1,15 @@
 <template>
-  <v-form class="d-flex">
-    <v-text-field v-model="input">
+  <v-form class="d-flex align-end">
+    <v-text-field v-model="input"></v-text-field>
+    <v-text-field>
       <template v-slot:append>
-        <v-btn type="submit" class="ma-1" elevation="1" small rounded text><v-icon>mdi-check</v-icon></v-btn>
-        <v-btn @click="$emit('close')" class="ma-1" elevation="1" small rounded text><v-icon>mdi-close</v-icon></v-btn>
+        <div class="d-flex">
+        <v-btn type="submit" class="ma-1" elevation="1" x-small rounded text><v-icon>mdi-check</v-icon></v-btn>
+        <v-btn @click="$emit('close')" class="ma-1" elevation="1" x-small rounded text><v-icon>mdi-close</v-icon></v-btn>
+  </div>
       </template>
     </v-text-field>
+      
   </v-form>
 </template>
 
