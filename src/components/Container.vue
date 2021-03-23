@@ -14,12 +14,9 @@
           v-for="category in budget.categories"
           :key="category.label"
           :category="category"
-          @add-line-item="
-            (category) =>
-              category.lineItems.push({ label: '', budgeted: null })
-          "
+          @add-line-item="$emit('add-line-item', category)"
         >
-          <line-item v-for="(lineItem, i) in category.lineItems" :key="i" :lineItem="lineItem"></line-item>
+          <line-item v-for="(lineItem, i) in category.lineItems" :key="i" :lineItem="lineItem" @cancel="$emit('line-item-cancelled', i, category)"></line-item>
           
         </category>
       </v-container>
@@ -40,6 +37,15 @@ export default {
     Category,
     LineItem
   },
+
+  methods: {
+    cancel(i, category) {
+      let upTo = category.lineItems.slice(0, i);
+      let after = category.lineItems.slice(i + 1);
+
+      return category.lineItems = upTo.concat(after);
+    }
+  }
 };
 </script>
 

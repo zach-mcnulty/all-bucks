@@ -1,35 +1,42 @@
 <template>
-  <v-form class="d-flex align-end">
-    <v-text-field v-model="input"></v-text-field>
-    <v-text-field>
+  <form class="d-flex align-end">
+    <v-text-field v-model="labelInput" required></v-text-field>
+    <v-text-field v-model="budgetedInput" required >
       <template v-slot:append>
         <div class="d-flex">
-        <v-btn type="submit" class="ma-1" elevation="1" x-small rounded text><v-icon>mdi-check</v-icon></v-btn>
-        <v-btn @click="$emit('close')" class="ma-1" elevation="1" x-small rounded text><v-icon>mdi-close</v-icon></v-btn>
+        <v-btn type="submit" @click.prevent="$emit('edit')" class="ma-1" elevation="1" x-small rounded text><v-icon>mdi-check</v-icon></v-btn>
+        <v-btn @click="$emit('cancel')" class="ma-1" elevation="1" x-small rounded text><v-icon>mdi-close</v-icon></v-btn>
   </div>
       </template>
     </v-text-field>
       
-  </v-form>
+  </form>
 </template>
 
 <script>
 export default {
-  props: ["value"],
+  props: ["labelValue", "budgetedValue"],
 
   data() {
     return {
-      input: "",
+      labelInput: "",
+      budgetedInput: ""
     };
   },
 
   watch: {
-    value: function () {
-      return (this.input = this.value);
+    labelValue: function () {
+      return (this.labelInput = this.labelValue);
     },
-    input: function () {
-      return this.$emit("input", this.input);
+    budgetedValue: function () {
+      return (this.budgetedInput = this.budgetedValue);
     },
+    labelInput: function () {
+      return this.$emit("labelInput", this.labelInput);
+    },
+    budgetedInput: function () {
+      return this.$emit("budgetedInput", this.budgetedInput);
+    }
   },
 };
 </script>

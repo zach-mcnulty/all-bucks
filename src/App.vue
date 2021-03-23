@@ -4,13 +4,14 @@
     <drawer :value="drawer" @input="(input) => (drawer = input)"></drawer>
 
     <v-main class="green lighten-3">
-      <container :budget="activeBudget"></container>
+      <container :budget="activeBudget" @add-line-item="addLineItem" @line-item-cancelled="lineItemCancelled"></container>
     </v-main>
   </v-app>
 </template>
 
 <script>
 import { Budget } from "./modules/Budget.js";
+import { LineItem } from "./modules/LineItem.js";
 import AppBar from "./components/AppBar.vue";
 import Drawer from "./components/Drawer.vue";
 import Container from "./components/Container.vue";
@@ -36,7 +37,22 @@ export default {
   },
 
   methods: {
-    //
+    addLineItem(category) {
+      return this.activeBudget.categories
+        .find(c => c.label === category.label)
+          .lineItems
+          .push(new LineItem);
+    },
+    lineItemCancelled(i, category) {
+      let revisedLineItemsArr;
+
+      let i_Before = category.lineItems.slice(0, i);
+      let i_After = category.lineItems.slice(i + 1);
+
+      revisedLineItemsArr = i_Before.concat(i_After);
+
+      return category.lineItems = revisedLineItemsArr; 
+    }
   },
 };
 </script>

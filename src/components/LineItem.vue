@@ -7,7 +7,7 @@
     </v-row>
     <v-row v-else>
       <v-col>
-        <edit-form></edit-form>
+        <edit-form :labelValue="labelValue" :budgetedValue="budgetedValue" @labelInput="(labelInput) => labelValue = labelInput" @budgetedInput="(budgetedInput) => budgetedValue = budgetedInput" @cancel="$emit('cancel')"></edit-form>
       </v-col>
     </v-row>
   </v-container>
@@ -25,20 +25,13 @@ export default {
 
   data() {
     return {
-      editLabel: false,
-      label: "",
-      budgeted: 0,
+      labelValue: this.lineItem.label,
+      budgetedValue: this.lineItem.budgeted
     };
   },
 
   computed: {
-    test() {
-      if (this.editLabel) {
-        return "EditForm";
-      } else {
-        return "v-col";
-      }
-    },
+    //
   },
 
   methods: {
