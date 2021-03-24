@@ -14,19 +14,13 @@
           v-for="category in budget.categories"
           :key="category.label"
           :category="category"
-          @add-line-item="$emit('add-line-item', category)"
+          @new-line-item-submitted="createNewLineItem({ ...$event, category })"
+          @new-ref="closeForms"
         >
           <line-item
             v-for="(lineItem, i) in category.lineItems"
             :key="i"
             :lineItem="lineItem"
-            v-on:update:lineItem="
-              [
-                (lineItem.label = $event.labelValue),
-                (lineItem.budgeted = $event.budgetedValue),
-              ]
-            "
-            @new-line-item-cancelled="deleteLineItem(i, category)"
           ></line-item>
         </category>
       </v-container>
@@ -38,6 +32,7 @@
 import BudgetHeader from "./BudgetHeader.vue";
 import Category from "./Category.vue";
 import LineItem from "./LineItem.vue";
+import { LineItemClass } from "../modules/LineItemClass.js";
 
 export default {
   props: ["budget"],
@@ -48,17 +43,38 @@ export default {
     LineItem,
   },
 
+  data() {
+    return {
+      //
+    }
+  },
+
   methods: {
-    deleteLineItem(i, category) {
-      let revisedLineItems;
+    closeForms(ref) {
+      let refsArr = Object.keys(this.$refs);
 
-      let lineItems_pre = category.lineItems.slice(0, i);
-      let lineItems_post = category.lineItems.slice(i + 1);
+      if (refsArr.length) {
+        this.$refs[refsArr[0]].$listeners.cancel();
+      }
 
-      revisedLineItems = lineItems_pre.concat(lineItems_post);
-
-      return (category.lineItems = revisedLineItems);
+      return this.$refs = ref;
     },
+    createNewLineItem(event) {
+      let label = event.label, budgeted = event.budgeted
+      let category = this.budget.categories.find(c => c === event.category);
+
+      category.lineItems.push(new LineItemClass(label, budgeted));
+    },
+    // deleteLineItem(i, category) {
+    //   let revisedLineItems;
+
+    //   let lineItems_pre = category.lineItems.slice(0, i);
+    //   let lineItems_post = category.lineItems.slice(i + 1);
+
+    //   revisedLineItems = lineItems_pre.concat(lineItems_post);
+
+    //   return (category.lineItems = revisedLineItems);
+    // },
   },
 };
 </script>

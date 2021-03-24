@@ -1,32 +1,61 @@
 <template>
-  <v-container fluid class="pa-0">
-    <v-row v-if="lineItem.label && lineItem.budgeted !== null">
-      <v-col class="px-0">{{ lineItem.label }}</v-col>
-      <v-col class="d-flex justify-end px-0">{{ lineItem.budgeted }}</v-col>
-      <v-progress-linear></v-progress-linear>
-    </v-row>
-    <v-row v-else>
-      <v-col class="px-0">
-        <edit-form :labelValue="labelValue" :budgetedValue="budgetedValue" @labelInput="(labelInput) => labelValue = labelInput" @budgetedInput="(budgetedInput) => budgetedValue = budgetedInput" @line-item-details-submitted="$emit('update:lineItem', {labelValue, budgetedValue})" @cancel="$emit('new-line-item-cancelled')"></edit-form>
+  <v-container fluid class="pa-0 my-2">
+    <v-row>
+      <v-col
+        v-if="!editingLabel"
+        @click="
+          [(editingLabel = true), $nextTick(() => $emit('new-ref', $refs))]
+        "
+        class="px-0 pb-3"
+        >{{ lineItem.label }}</v-col
+      >
+      <v-col v-else class="pa-0">
+        <line-item-details-form
+          :value="labelValue"
+          @input="(input) => (labelValue = input)"
+          @cancel="editingLabel = false"
+          ref="form1"
+        >
+        </line-item-details-form>
       </v-col>
+      <v-col
+        v-if="!editingBudgeted"
+        @click="
+          [(editingBudgeted = true), $nextTick(() => $emit('new-ref', $refs))]
+        "
+        class="d-flex justify-end px-0 pb-3"
+        >{{ lineItem.budgeted }}</v-col
+      >
+      <v-col v-else class="pa-1">
+        <line-item-details-form
+          :value="labelValue"
+          @input="(input) => (budgetedValue = input)"
+          @cancel="editingBudgeted = false"
+          ref="form2"
+        >
+        </line-item-details-form>
+      </v-col>
+      <v-progress-linear class="mb-1"></v-progress-linear>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import EditForm from "./EditForm.vue";
+import LineItemDetailsForm from "./LineItemDetailsForm.vue";
 
 export default {
   props: ["lineItem"],
 
   components: {
-    EditForm,
+    LineItemDetailsForm,
   },
 
   data() {
     return {
+      editingLabel: false,
+      editingBudgeted: false,
       labelValue: this.lineItem.label,
-      budgetedValue: this.lineItem.budgeted
+      budgetedValue: this.lineItem.budgeted,
     };
   },
 
@@ -35,10 +64,7 @@ export default {
   },
 
   methods: {
-    showEditForm(lineItem) {
-      this.oldLabel = lineItem.label;
-      return;
-    },
+    //
   },
 };
 </script>
