@@ -16,8 +16,18 @@
           :category="category"
           @add-line-item="$emit('add-line-item', category)"
         >
-          <line-item v-for="(lineItem, i) in category.lineItems" :key="i" :lineItem="lineItem" @cancel="$emit('line-item-cancelled', i, category)"></line-item>
-          
+          <line-item
+            v-for="(lineItem, i) in category.lineItems"
+            :key="i"
+            :lineItem="lineItem"
+            v-on:update:lineItem="
+              [
+                (lineItem.label = $event.labelValue),
+                (lineItem.budgeted = $event.budgetedValue),
+              ]
+            "
+            @new-line-item-cancelled="deleteLineItem(i, category)"
+          ></line-item>
         </category>
       </v-container>
     </v-container>
@@ -35,17 +45,21 @@ export default {
   components: {
     BudgetHeader,
     Category,
-    LineItem
+    LineItem,
   },
 
   methods: {
-    cancel(i, category) {
-      let upTo = category.lineItems.slice(0, i);
-      let after = category.lineItems.slice(i + 1);
+    deleteLineItem(i, category) {
+      let revisedLineItems;
 
-      return category.lineItems = upTo.concat(after);
-    }
-  }
+      let lineItems_pre = category.lineItems.slice(0, i);
+      let lineItems_post = category.lineItems.slice(i + 1);
+
+      revisedLineItems = lineItems_pre.concat(lineItems_post);
+
+      return (category.lineItems = revisedLineItems);
+    },
+  },
 };
 </script>
 

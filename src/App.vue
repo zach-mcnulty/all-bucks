@@ -4,7 +4,7 @@
     <drawer :value="drawer" @input="(input) => (drawer = input)"></drawer>
 
     <v-main class="green lighten-3">
-      <container :budget="activeBudget" @add-line-item="addLineItem" @line-item-cancelled="lineItemCancelled"></container>
+      <container :budget="activeBudget" @add-line-item="addLineItem" @line-item-details-submitted="lineItemDetailsSubmitted" @line-item-cancelled="lineItemCancelled"></container>
     </v-main>
   </v-app>
 </template>
@@ -43,15 +43,18 @@ export default {
           .lineItems
           .push(new LineItem);
     },
+    lineItemDetailsSubmitted(labelValue, budgetedValue) {
+      console.log(labelValue, budgetedValue)
+    },
     lineItemCancelled(i, category) {
-      let revisedLineItemsArr;
+      let revisedLineItems;
 
-      let i_Before = category.lineItems.slice(0, i);
-      let i_After = category.lineItems.slice(i + 1);
+      let lineItems_pre = category.lineItems.slice(0, i);
+      let lineItems_post = category.lineItems.slice(i + 1);
 
-      revisedLineItemsArr = i_Before.concat(i_After);
+      revisedLineItems = lineItems_pre.concat(lineItems_post);
 
-      return category.lineItems = revisedLineItemsArr; 
+      return category.lineItems = revisedLineItems; 
     }
   },
 };

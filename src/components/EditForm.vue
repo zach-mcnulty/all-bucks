@@ -1,10 +1,10 @@
 <template>
-  <form class="d-flex align-end">
-    <v-text-field v-model="labelInput" required></v-text-field>
-    <v-text-field v-model="budgetedInput" required >
+  <form @submit.prevent="$emit('line-item-details-submitted')" class="d-flex align-end">
+    <v-text-field v-model="labelInput" required placeholder="Label" class="mr-1" style="width:50%;"></v-text-field>
+    <v-text-field v-model="budgetedInput" required placeholder="Amount" style="width:50%;">
       <template v-slot:append>
         <div class="d-flex">
-        <v-btn type="submit" @click.prevent="$emit('edit')" class="ma-1" elevation="1" x-small rounded text><v-icon>mdi-check</v-icon></v-btn>
+        <v-btn type="submit" class="ma-1" elevation="1" x-small rounded text><v-icon>mdi-check</v-icon></v-btn>
         <v-btn @click="$emit('cancel')" class="ma-1" elevation="1" x-small rounded text><v-icon>mdi-close</v-icon></v-btn>
   </div>
       </template>
