@@ -1,25 +1,32 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="my-2 white">
     <v-row>
-      <v-col class="px-0 py-1 subtitle-1">{{ category.label }}</v-col>
+      <v-col class="font-weight-bold text-uppercase">{{
+        category.label
+      }}</v-col>
+      <v-col class="d-flex justify-end planned font-weight-thin text-uppercase"
+        >Planned</v-col
+      >
     </v-row>
 
     <slot></slot>
 
-    <v-row class="mt-4">
-      <v-col class="pa-0">
+    <v-row>
+      <v-col>
         <a
           v-if="!clicked"
           href="#"
-          @click.prevent="[clicked = true, $nextTick(() => $emit('new-ref', $refs))]"
+          @click.prevent="
+            [(clicked = true), $nextTick(() => $emit('update-refs', $refs))]
+          "
           class="caption text-decoration-none"
           >Add Line Item</a
         >
         <new-line-item-form
           v-else
           ref="form"
-          @new-line-item-submitted="clicked = false"
-          @cancel="clicked = false"
+          @new-line-item-submitted="[(clicked = false), $emit('update-refs')]"
+          @cancel="[(clicked = false), $emit('update-refs')]"
           v-on="$listeners"
         ></new-line-item-form>
       </v-col>
@@ -49,5 +56,9 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.planned {
+  font-size: 0.8rem;
+  letter-spacing: 0.08rem;
+}
 </style>

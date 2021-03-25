@@ -3,8 +3,8 @@
     <app-bar @drawer="drawer = true"></app-bar>
     <drawer :value="drawer" @input="(input) => (drawer = input)"></drawer>
 
-    <v-main class="green lighten-3">
-      <container :budget="activeBudget"></container>
+    <v-main class="grey lighten-3">
+      <budget-container :budget="activeBudget"></budget-container>
     </v-main>
   </v-app>
 </template>
@@ -13,7 +13,7 @@
 import { Budget } from "./modules/Budget.js";
 import AppBar from "./components/AppBar.vue";
 import Drawer from "./components/Drawer.vue";
-import Container from "./components/Container.vue";
+import BudgetContainer from "./components/BudgetContainer.vue";
 
 export default {
   name: "All_Bucks",
@@ -21,7 +21,7 @@ export default {
   components: {
     AppBar,
     Drawer,
-    Container
+    BudgetContainer
   },
 
   data: () => ({

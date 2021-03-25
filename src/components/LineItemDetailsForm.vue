@@ -1,13 +1,19 @@
 <template>
   <form
-    @submit.prevent="$emit('new-line-item-submitted', {label, budgeted})"
-    class="d-flex align-center" style="height:40px;"
+    @submit.prevent="$emit('new-line-item-details-submitted')"
+    class="d-flex align-center"
   >
-
-    <v-text-field v-model="input" style="width:100%;"></v-text-field>
+    <v-text-field v-model="input"></v-text-field>
 
     <div class="d-flex">
-      <v-btn v-if="input" type="submit" class="ml-1" elevation="1" x-small rounded text
+      <v-btn
+        v-if="input"
+        type="submit"
+        class="ml-1"
+        elevation="1"
+        x-small
+        rounded
+        text
         ><v-icon>mdi-check</v-icon></v-btn
       >
       <v-btn
@@ -30,22 +36,20 @@ export default {
 
   data() {
     return {
-      input: ""
-    }
+      input: "",
+    };
   },
 
   watch: {
-    value: function() {
+    value: function () {
       this.input = this.value;
     },
-    input: function() {
-      this.$emit('input', this.input);
-    }
-  }
-
-}
+    input: function () {
+      this.$emit("input", this.input);
+    },
+  },
+};
 </script>
 
 <style>
-
 </style>

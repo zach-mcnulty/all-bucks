@@ -1,41 +1,50 @@
 <template>
-  <v-container fluid class="pa-0 my-2">
+  <v-container fluid class="px-0">
     <v-row>
-      <v-col
-        v-if="!editingLabel"
-        @click="
-          [(editingLabel = true), $nextTick(() => $emit('new-ref', $refs))]
-        "
-        class="px-0 pb-3"
-        >{{ lineItem.label }}</v-col
-      >
-      <v-col v-else class="pa-0">
+      <v-col>
+        <div
+          v-if="!editingLabel"
+          @click="[(editingLabel = true), $nextTick(() => sendRefs())]"
+        >
+          {{ lineItem.label }}
+        </div>
         <line-item-details-form
+          v-else
           :value="labelValue"
           @input="(input) => (labelValue = input)"
-          @cancel="editingLabel = false"
-          ref="form1"
+          @new-line-item-details-submitted="
+            [
+              $emit('new-line-item-details-submitted', labelValue),
+              (editingLabel = false),
+            ]
+          "
+          @cancel="[$emit('update-refs'), (editingLabel = false)]"
+          ref="labelForm"
         >
         </line-item-details-form>
       </v-col>
-      <v-col
-        v-if="!editingBudgeted"
-        @click="
-          [(editingBudgeted = true), $nextTick(() => $emit('new-ref', $refs))]
-        "
-        class="d-flex justify-end px-0 pb-3"
-        >{{ lineItem.budgeted }}</v-col
-      >
-      <v-col v-else class="pa-1">
+      <v-col>
+        <div
+          v-if="!editingBudgeted"
+          @click="[(editingBudgeted = true), $nextTick(() => sendRefs())]"
+          class="d-flex justify-end"
+        >
+          {{ lineItem.budgeted }}
+        </div>
         <line-item-details-form
-          :value="labelValue"
+          v-else
+          :value="budgetedValue"
           @input="(input) => (budgetedValue = input)"
-          @cancel="editingBudgeted = false"
-          ref="form2"
+          @new-line-item-details-submitted="
+            $emit('new-line-item-details-submitted', budgetedValue)
+          "
+          @cancel="[$emit('update-refs'), (editingBudgeted = false)]"
+          ref="budgetedForm"
         >
         </line-item-details-form>
       </v-col>
-      <v-progress-linear class="mb-1"></v-progress-linear>
+
+      <v-progress-linear class="mx-2 mb-1"></v-progress-linear>
     </v-row>
   </v-container>
 </template>
@@ -64,7 +73,13 @@ export default {
   },
 
   methods: {
-    //
+    sendRefs() {
+      this.$emit("update-refs", this.$refs);
+
+      //Reset $refs to prevent issues in Container
+      //with two $refs being emitted from this component
+      this.$refs = {};
+    },
   },
 };
 </script>
