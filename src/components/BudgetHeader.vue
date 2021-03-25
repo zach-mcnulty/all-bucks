@@ -1,6 +1,6 @@
 <template>
   <v-container
-    class="mb-3 white elevation-5"
+    class="white rounded-lg elevation-4"
     style="position: sticky; top: 56px"
   >
     <v-row class="d-flex space-between">

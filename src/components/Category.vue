@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="my-2 white">
+  <v-container fluid class="mb-2 white">
     <v-row>
       <v-col class="font-weight-bold text-uppercase">{{
         category.label

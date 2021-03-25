@@ -1,7 +1,8 @@
 <template>
   <v-container fluid class="pa-0">
-    <budget-header :budget="budget" class=""></budget-header>
-
+    <v-container class="splitColorBackground">
+      <budget-header :budget="budget"></budget-header>
+    </v-container>
     <category
       v-for="category in budget.categories"
       :key="category.label"
@@ -88,5 +89,13 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.splitColorBackground {
+  background: rgb(76, 175, 80);
+  background: linear-gradient(
+    180deg,
+    rgba(76, 175, 80, 1) 50%,
+    rgba(238, 238, 238, 1) 50%
+  );
+}
 </style>
