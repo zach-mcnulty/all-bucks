@@ -1,11 +1,14 @@
 <template>
   <form
     @submit.prevent="$emit('new-line-item-submitted', { label, budgeted })"
+    
     class="d-flex flex-column align-end"
   >
     <div class="d-flex" style="width: 100%">
       <v-text-field
         v-model="label"
+        
+        height="24"
         required
         placeholder="Label"
         class="mr-1"
@@ -13,6 +16,7 @@
       ></v-text-field>
       <v-text-field
         v-model="budgeted"
+        height="24"
         required
         placeholder="Amount"
         style="width: 50%"

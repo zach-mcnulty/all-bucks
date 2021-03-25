@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="mb-2 white">
+  <v-container fluid class="my-2 white">
     <v-row>
       <v-col class="font-weight-bold text-uppercase">{{
         category.label
@@ -16,17 +16,15 @@
         <a
           v-if="!clicked"
           href="#"
-          @click.prevent="
-            [(clicked = true), $nextTick(() => $emit('update-refs', $refs))]
-          "
+          @click.prevent="clicked = true"
           class="caption text-decoration-none"
           >Add Line Item</a
         >
         <new-line-item-form
-          v-else
-          ref="form"
-          @new-line-item-submitted="[(clicked = false), $emit('update-refs')]"
-          @cancel="[(clicked = false), $emit('update-refs')]"
+          v-else          
+          @new-line-item-submitted="clicked = false"
+          @cancel="clicked = false"
+          v-click-outside="clickedOutsideNewLineItemForm"
           v-on="$listeners"
         ></new-line-item-form>
       </v-col>
@@ -51,7 +49,11 @@ export default {
   },
 
   methods: {
-    //
+    clickedOutsideNewLineItemForm() {
+      return this.$nextTick(() => {
+        this.clicked = false;
+      })
+    }
   },
 };
 </script>

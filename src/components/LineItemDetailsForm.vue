@@ -1,9 +1,9 @@
 <template>
   <form
     @submit.prevent="$emit('new-line-item-details-submitted')"
-    class="d-flex align-center"
+    class="d-flex align-center" style="height:24px;"
   >
-    <v-text-field v-model="input"></v-text-field>
+    <v-text-field v-model="input" height="24"></v-text-field>
 
     <div class="d-flex">
       <v-btn

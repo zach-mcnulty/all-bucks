@@ -4,29 +4,40 @@
       <v-col>
         <div
           v-if="!editingLabel"
-          @click="[(editingLabel = true), $nextTick(() => sendRefs())]"
+          @click="editingLabel = true"
+          @mouseover="iconToggle = 'd-block'"
+          @mouseleave="iconToggle = 'd-none'"
+          class="d-flex"
         >
-          {{ lineItem.label }}
+          <span>
+            {{ lineItem.label }}
+          </span>
+          <v-btn
+            :class="[screenSize === 'xs' ? 'd-block' : iconToggle, 'ml-1']"
+            height="24"
+            fab
+            text
+            x-small
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
         </div>
         <line-item-details-form
           v-else
           :value="labelValue"
           @input="(input) => (labelValue = input)"
           @new-line-item-details-submitted="
-            [
-              $emit('new-line-item-details-submitted', labelValue),
-              (editingLabel = false),
-            ]
+            $emit('new-line-item-details-submitted', labelValue)
           "
-          @cancel="[$emit('update-refs'), (editingLabel = false)]"
-          ref="labelForm"
+          @cancel="editingLabel = false"
+          v-click-outside="clickedOutsideLabelForm"
         >
         </line-item-details-form>
       </v-col>
       <v-col>
         <div
           v-if="!editingBudgeted"
-          @click="[(editingBudgeted = true), $nextTick(() => sendRefs())]"
+          @click="editingBudgeted = true"
           class="d-flex justify-end"
         >
           {{ lineItem.budgeted }}
@@ -38,8 +49,8 @@
           @new-line-item-details-submitted="
             $emit('new-line-item-details-submitted', budgetedValue)
           "
-          @cancel="[$emit('update-refs'), (editingBudgeted = false)]"
-          ref="budgetedForm"
+          @cancel="[(editingBudgeted = false)]"
+          v-click-outside="clickedOutsideBudgetedForm"
         >
         </line-item-details-form>
       </v-col>
@@ -62,24 +73,32 @@ export default {
   data() {
     return {
       editingLabel: false,
-      editingBudgeted: false,
       labelValue: this.lineItem.label,
+
+      editingBudgeted: false,
       budgetedValue: this.lineItem.budgeted,
+
+      iconToggle: "d-none",
     };
   },
 
   computed: {
-    //
+    screenSize() {
+      return this.$vuetify.breakpoint.name;
+    },
   },
 
   methods: {
-    sendRefs() {
-      this.$emit("update-refs", this.$refs);
-
-      //Reset $refs to prevent issues in Container
-      //with two $refs being emitted from this component
-      this.$refs = {};
+    clickedOutsideBudgetedForm() {
+      return this.$nextTick(() => {
+        this.editingBudgeted = false;
+      });
     },
+    clickedOutsideLabelForm() {
+      return this.$nextTick(() => {
+        this.editingLabel = false;
+      });
+    }
   },
 };
 </script>

@@ -8,14 +8,12 @@
       :key="category.label"
       :category="category"
       @new-line-item-submitted="createNewLineItem({ ...$event, category })"
-      @update-refs="closeForms"
     >
       <line-item
         v-for="(lineItem, i) in category.lineItems"
         :key="i"
         :lineItem="lineItem"
-        @new-line-item-details-submitted="updateLineItem({ $event, lineItem })"
-        @update-refs="closeForms"
+        @new-line-item-details-submitted="updateLineItemDetails({ $event, lineItem })"
       ></line-item>
     </category>
   </v-container>
@@ -43,37 +41,12 @@ export default {
   },
 
   methods: {
-    updateLineItem({ $event, lineItem }) {
-      return (lineItem.label = $event);
+    updateLineItemDetails({$event, lineItem}) {
+      let label = $event;
+      return (lineItem.label = label);
     },
-    closeForms(newFormRef) {
-      //claseForms called, but no argument emitted
-      //when forms are cancelled with cancel button.
-
-      //!newFormRef resets $refs on Container
-      //so button-cancelled forms can be reopened.
-      if (!newFormRef) {
-        return (this.$refs = {});
-      } else {
-        let keys = Object.keys(this.$refs);
-        //Call cancel method on the form refs
-        //currently stored by Container.
-
-        //App design should ensure only one ref stored at a time,
-        //but the forEach offers a little bit of a safety net.
-
-        //Cancel method closes forms.
-        keys.forEach((k) => this.$refs[k].$listeners.cancel());
-      }
-
-      return (this.$refs = newFormRef);
-    },
-    createNewLineItem(event) {
-      let label = event.label,
-        budgeted = event.budgeted;
-      let category = this.budget.categories.find((c) => c === event.category);
-
-      category.lineItems.push(new LineItemClass(label, budgeted));
+    createNewLineItem({label, budgeted, category}) {
+      return category.lineItems.push(new LineItemClass(label, budgeted));
     },
     // deleteLineItem(i, category) {
     //   let revisedLineItems;
