@@ -24,7 +24,7 @@
           v-else          
           @new-line-item-submitted="clicked = false"
           @cancel="clicked = false"
-          v-click-outside="clickedOutsideNewLineItemForm"
+          v-click-outside="closeNewLineItemForm"
           v-on="$listeners"
         ></new-line-item-form>
       </v-col>
@@ -49,7 +49,7 @@ export default {
   },
 
   methods: {
-    clickedOutsideNewLineItemForm() {
+    closeNewLineItemForm() {
       return this.$nextTick(() => {
         this.clicked = false;
       })

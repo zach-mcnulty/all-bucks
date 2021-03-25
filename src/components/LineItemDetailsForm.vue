@@ -3,11 +3,11 @@
     @submit.prevent="$emit('new-line-item-details-submitted')"
     class="d-flex align-center" style="height:24px;"
   >
-    <v-text-field v-model="input" height="24"></v-text-field>
+    <slot></slot>
 
     <div class="d-flex">
       <v-btn
-        v-if="input"
+        v-if="value"
         type="submit"
         class="ml-1"
         elevation="1"
@@ -36,17 +36,12 @@ export default {
 
   data() {
     return {
-      input: "",
+      //
     };
   },
 
   watch: {
-    value: function () {
-      this.input = this.value;
-    },
-    input: function () {
-      this.$emit("input", this.input);
-    },
+    //
   },
 };
 </script>

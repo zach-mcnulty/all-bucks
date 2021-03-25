@@ -13,10 +13,10 @@
             {{ lineItem.label }}
           </span>
           <v-btn
-            :class="[screenSize === 'xs' ? 'd-block' : iconToggle, 'ml-1']"
+            :class="[screenSize === 'xs' ? 'd-block' : iconToggle, 'ml-2']"
             height="24"
+            elevation="0"
             fab
-            text
             x-small
           >
             <v-icon>mdi-plus</v-icon>
@@ -24,14 +24,17 @@
         </div>
         <line-item-details-form
           v-else
-          :value="labelValue"
-          @input="(input) => (labelValue = input)"
+          :value="label"
           @new-line-item-details-submitted="
-            $emit('new-line-item-details-submitted', labelValue)
+            [
+              $emit('new-line-item-details-submitted', label),
+              (editingLabel = false),
+            ]
           "
           @cancel="editingLabel = false"
-          v-click-outside="clickedOutsideLabelForm"
+          v-click-outside="closeLabelForm"
         >
+          <v-text-field v-model="label"></v-text-field>
         </line-item-details-form>
       </v-col>
       <v-col>
@@ -44,14 +47,20 @@
         </div>
         <line-item-details-form
           v-else
-          :value="budgetedValue"
-          @input="(input) => (budgetedValue = input)"
+          :value="budgeted"
           @new-line-item-details-submitted="
-            $emit('new-line-item-details-submitted', budgetedValue)
+            [
+              $emit('new-line-item-details-submitted', budgetedParsed),
+              (editingBudgeted = false),
+            ]
           "
           @cancel="[(editingBudgeted = false)]"
-          v-click-outside="clickedOutsideBudgetedForm"
+          v-click-outside="closeBudgetedForm"
         >
+          <v-text-field
+            v-currency="vCurrencyOptions"
+            v-model="budgeted"
+          ></v-text-field>
         </line-item-details-form>
       </v-col>
 
@@ -62,6 +71,7 @@
 
 <script>
 import LineItemDetailsForm from "./LineItemDetailsForm.vue";
+import { parse } from "vue-currency-input";
 
 export default {
   props: ["lineItem"],
@@ -73,10 +83,18 @@ export default {
   data() {
     return {
       editingLabel: false,
-      labelValue: this.lineItem.label,
+      label: "",
 
       editingBudgeted: false,
-      budgetedValue: this.lineItem.budgeted,
+      budgeted: "",
+      vCurrencyOptions: {
+        locale: "en",
+        currency: "USD",
+        distractionFree: true,
+        autoDecimalMode: true,
+        valueRange: { min: 0 },
+        allowNegative: false,
+      },
 
       iconToggle: "d-none",
     };
@@ -86,19 +104,22 @@ export default {
     screenSize() {
       return this.$vuetify.breakpoint.name;
     },
+    budgetedParsed() {
+      return parse(this.budgeted, this.vCurrencyOptions);
+    },
   },
 
   methods: {
-    clickedOutsideBudgetedForm() {
+    closeBudgetedForm() {
       return this.$nextTick(() => {
         this.editingBudgeted = false;
       });
     },
-    clickedOutsideLabelForm() {
+    closeLabelForm() {
       return this.$nextTick(() => {
         this.editingLabel = false;
       });
-    }
+    },
   },
 };
 </script>

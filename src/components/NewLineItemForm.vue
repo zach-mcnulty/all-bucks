@@ -1,13 +1,13 @@
 <template>
   <form
-    @submit.prevent="$emit('new-line-item-submitted', { label, budgeted })"
-    
+    @submit.prevent="
+      $emit('new-line-item-submitted', { label, budgetedParsed })
+    "
     class="d-flex flex-column align-end"
   >
     <div class="d-flex" style="width: 100%">
       <v-text-field
         v-model="label"
-        
         height="24"
         required
         placeholder="Label"
@@ -15,12 +15,14 @@
         style="width: 50%"
       ></v-text-field>
       <v-text-field
+        v-currency="vCurrencyOptions"
         v-model="budgeted"
         height="24"
         required
         placeholder="Amount"
         style="width: 50%"
-      ></v-text-field>
+      >
+      </v-text-field>
     </div>
 
     <div class="d-flex">
@@ -41,12 +43,29 @@
 </template>
 
 <script>
+import { parse } from "vue-currency-input";
+
 export default {
   data() {
     return {
       label: "",
-      budgeted: "",
+      budgeted: 0,
+
+      vCurrencyOptions: {
+        locale: "en",
+        currency: "USD",
+        distractionFree: true,
+        autoDecimalMode: true,
+        valueRange: { min: 0 },
+        allowNegative: false,
+      },
     };
+  },
+
+  computed: {
+    budgetedParsed() {
+      return parse(this.budgeted, this.vCurrencyOptions);
+    },
   },
 };
 </script>

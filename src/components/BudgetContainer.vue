@@ -41,12 +41,20 @@ export default {
   },
 
   methods: {
-    updateLineItemDetails({$event, lineItem}) {
-      let label = $event;
-      return (lineItem.label = label);
+    updateLineItemDetails({ $event, lineItem }) {
+      let detail = $event;
+
+      let property;
+      if (typeof $event === "string") {
+        property = "label";
+      } else if (typeof $event === "number") {
+        property = "budgeted"
+      }
+
+      return lineItem[property] = detail;
     },
-    createNewLineItem({label, budgeted, category}) {
-      return category.lineItems.push(new LineItemClass(label, budgeted));
+    createNewLineItem({label, budgetedParsed, category}) {
+      return category.lineItems.push(new LineItemClass(label, budgetedParsed));
     },
     // deleteLineItem(i, category) {
     //   let revisedLineItems;

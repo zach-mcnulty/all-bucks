@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import App from './App.vue'
 import vuetify from './plugins/vuetify';
+import VueCurrencyInput from 'vue-currency-input'
+
+Vue.use(VueCurrencyInput)
 
 Vue.config.productionTip = false
 
