@@ -1,7 +1,10 @@
 <template>
   <v-container fluid class="pa-0">
-    <v-container class="splitColorBackground">
-      <budget-header :budget="budget"></budget-header>
+    <v-container fluid class="splitColorBackground">
+      <budget-header
+        :budget="budget"
+        @new-budget-details-submitted="updateIncome({$event})"
+      ></budget-header>
     </v-container>
     <category
       v-for="category in budget.categories"
@@ -13,7 +16,9 @@
         v-for="(lineItem, i) in category.lineItems"
         :key="i"
         :lineItem="lineItem"
-        @new-line-item-details-submitted="updateLineItemDetails({ $event, lineItem })"
+        @new-budget-details-submitted="
+          updateLineItemDetails({ $event, lineItem })
+        "
       ></line-item>
     </category>
   </v-container>
@@ -41,6 +46,10 @@ export default {
   },
 
   methods: {
+    updateIncome({$event}) {
+      let income = $event;
+      return this.budget.income = income;
+    },
     updateLineItemDetails({ $event, lineItem }) {
       let detail = $event;
 
@@ -48,12 +57,12 @@ export default {
       if (typeof $event === "string") {
         property = "label";
       } else if (typeof $event === "number") {
-        property = "budgeted"
+        property = "budgeted";
       }
 
-      return lineItem[property] = detail;
+      return (lineItem[property] = detail);
     },
-    createNewLineItem({label, budgetedParsed, category}) {
+    createNewLineItem({ label, budgetedParsed, category }) {
       return category.lineItems.push(new LineItemClass(label, budgetedParsed));
     },
     // deleteLineItem(i, category) {

@@ -15,16 +15,57 @@
       <v-col
         class="d-flex flex-column justify-center align-end flex-md-row justify-md-end align-md-center"
       >
-        <div>Income: {{ budget.income }}</div>
-        <div>Budgeted: {{ budgeted }}</div>
+        <div v-if="!editingIncome" @click="editingIncome = true">
+          Income: {{ budget.income | currency}}
+        </div>
+        <budget-details-form
+          v-else
+          :value="income"
+          @new-budget-details-submitted="
+            [
+              $emit('new-budget-details-submitted', parsedIncome),
+              (editingIncome = false),
+            ]
+          "
+        >
+          <v-text-field
+            v-model="income"
+            v-currency="vCurrencyOptions"
+            v-click-outside="closeIncomeForm"
+          ></v-text-field>
+        </budget-details-form>
+        <div>Budgeted: {{ budgeted | currency }}</div>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import BudgetDetailsForm from "./BudgetDetailsForm.vue";
+import { parse } from "vue-currency-input";
+
 export default {
   props: ["budget"],
+
+  components: {
+    BudgetDetailsForm,
+  },
+
+  data() {
+    return {
+      income: "",
+      editingIncome: false,
+
+      vCurrencyOptions: {
+        locale: "en",
+        currency: "USD",
+        distractionFree: true,
+        autoDecimalMode: true,
+        valueRange: { min: 0 },
+        allowNegative: false,
+      },
+    };
+  },
 
   computed: {
     budgeted() {
@@ -40,6 +81,26 @@ export default {
         .flat();
 
       return expenditures.reduce((a, b) => a + b.spent, 0);
+    },
+    parsedIncome() {
+      return parse(this.income, this.vCurrencyOptions);
+    },
+  },
+
+  methods: {
+    closeIncomeForm() {
+      return this.$nextTick(() => {
+        this.editingIncome = false;
+      });
+    },
+  },
+
+  filters: {
+    currency: function (num) {
+      return num.toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD",
+      });
     },
   },
 };

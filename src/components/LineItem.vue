@@ -22,12 +22,12 @@
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </div>
-        <line-item-details-form
+        <budget-details-form
           v-else
           :value="label"
-          @new-line-item-details-submitted="
+          @new-budget-details-submitted="
             [
-              $emit('new-line-item-details-submitted', label),
+              $emit('new-budget-details-submitted', label),
               (editingLabel = false),
             ]
           "
@@ -35,7 +35,7 @@
           v-click-outside="closeLabelForm"
         >
           <v-text-field v-model="label"></v-text-field>
-        </line-item-details-form>
+        </budget-details-form>
       </v-col>
       <v-col>
         <div
@@ -43,14 +43,14 @@
           @click="editingBudgeted = true"
           class="d-flex justify-end"
         >
-          {{ lineItem.budgeted }}
+          {{ lineItem.budgeted | currency}}
         </div>
-        <line-item-details-form
+        <budget-details-form
           v-else
           :value="budgeted"
-          @new-line-item-details-submitted="
+          @new-budget-details-submitted="
             [
-              $emit('new-line-item-details-submitted', budgetedParsed),
+              $emit('new-budget-details-submitted', budgetedParsed),
               (editingBudgeted = false),
             ]
           "
@@ -61,7 +61,7 @@
             v-currency="vCurrencyOptions"
             v-model="budgeted"
           ></v-text-field>
-        </line-item-details-form>
+        </budget-details-form>
       </v-col>
 
       <v-progress-linear class="mx-2 mb-1"></v-progress-linear>
@@ -70,14 +70,14 @@
 </template>
 
 <script>
-import LineItemDetailsForm from "./LineItemDetailsForm.vue";
+import BudgetDetailsForm from "./BudgetDetailsForm.vue";
 import { parse } from "vue-currency-input";
 
 export default {
   props: ["lineItem"],
 
   components: {
-    LineItemDetailsForm,
+    BudgetDetailsForm,
   },
 
   data() {
@@ -118,6 +118,15 @@ export default {
     closeLabelForm() {
       return this.$nextTick(() => {
         this.editingLabel = false;
+      });
+    },
+  },
+
+  filters: {
+    currency: function (num) {
+      return num.toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD",
       });
     },
   },

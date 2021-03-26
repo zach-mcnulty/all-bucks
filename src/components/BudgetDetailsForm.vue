@@ -1,6 +1,6 @@
 <template>
   <form
-    @submit.prevent="$emit('new-line-item-details-submitted')"
+    @submit.prevent="$emit('new-budget-details-submitted')"
     class="d-flex align-center" style="height:24px;"
   >
     <slot></slot>
