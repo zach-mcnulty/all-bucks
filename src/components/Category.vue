@@ -4,7 +4,7 @@
       <v-col class="font-weight-bold text-uppercase">{{
         category.label
       }}</v-col>
-      <v-col class="d-flex justify-end planned font-weight-thin text-uppercase"
+      <v-col class="d-flex justify-end caption text-uppercase"
         >Planned</v-col
       >
     </v-row>
@@ -58,9 +58,6 @@ export default {
 };
 </script>
 
-<style scoped>
-.planned {
-  font-size: 0.8rem;
-  letter-spacing: 0.08rem;
-}
+<style>
+
 </style>
