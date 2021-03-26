@@ -32,7 +32,16 @@
       </v-col>
       <v-col class="d-flex justify-center align-center">
         <v-progress-circular
-          color="green darken-1"
+          :value="spendingProgress"
+          :color="
+            spendingProgress <= 100
+              ? spendingProgress >= 75
+                ? 'yellow'
+                : 'green'
+              : 'red'
+          "
+          rotate="-90"
+          background-color="grey lighten-3"
           size="100"
           width="14"
         ></v-progress-circular>
@@ -83,7 +92,9 @@ export default {
     budgeted() {
       let lineItems = this.budget.categories.map((c) => c.lineItems).flat();
 
-      return lineItems.reduce((a, b) => a + b.budgeted, 0);
+      let budgeted = lineItems.reduce((a, b) => a + b.budgeted, 0);
+
+      return budgeted;
     },
     spent() {
       let expenditures = this.budget.categories
@@ -92,10 +103,20 @@ export default {
         .map((l) => l.expenditures)
         .flat();
 
-      return expenditures.reduce((a, b) => a + b.spent, 0);
+      let spent = expenditures.reduce((a, b) => a + b.spent, 0);
+
+      return spent;
     },
     parsedIncome() {
       return parse(this.income, this.vCurrencyOptions);
+    },
+    spendingProgress() {
+      if (this.budgeted) {
+        return (this.spent / this.budgeted) * 100;
+      } else {
+        return this.spent ? 101 : 0;
+      }
+      
     },
   },
 

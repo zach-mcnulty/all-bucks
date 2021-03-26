@@ -61,7 +61,13 @@
 
       <v-progress-linear
         :value="spendingProgress"
-        :color="spendingProgress < 100 ? 'green' : 'red'"
+        :color="
+          spendingProgress <= 100
+            ? spendingProgress >= 75
+              ? 'yellow'
+              : 'green'
+            : 'red'
+        "
         background-color="grey lighten-3"
         rounded
         class="mx-2 mb-1"
