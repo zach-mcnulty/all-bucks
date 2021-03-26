@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- Full Screen Dialog for Mobile -->
     <v-dialog
       v-if="screenSize === 'xs'"
       v-model="dialog"
@@ -27,6 +28,8 @@
         @cancel="dialog = false"
       ></log-expenditure-dialog-form>
     </v-dialog>
+
+    <!-- Dialog for Desktop -->
     <v-dialog
       v-else
       v-model="dialog"
@@ -48,6 +51,10 @@
       </template>
       <log-expenditure-dialog-form
         :screenSize="screenSize"
+        @expenditure-submitted="
+          [$emit('expenditure-submitted', $event), (dialog = false)]
+        "
+        @cancel="dialog = false"
       ></log-expenditure-dialog-form>
     </v-dialog>
   </div>

@@ -12,7 +12,10 @@
           <span>
             {{ lineItem.label }}
           </span>
-          <log-expenditure-dialog :iconToggle="iconToggle" v-on="$listeners"></log-expenditure-dialog>
+          <log-expenditure-dialog
+            :iconToggle="iconToggle"
+            v-on="$listeners"
+          ></log-expenditure-dialog>
         </div>
         <budget-details-form
           v-else
@@ -56,7 +59,13 @@
         </budget-details-form>
       </v-col>
 
-      <v-progress-linear class="mx-2 mb-1"></v-progress-linear>
+      <v-progress-linear
+        :value="spendingProgress"
+        :color="spendingProgress < 100 ? 'green' : 'red'"
+        background-color="grey lighten-3"
+        rounded
+        class="mx-2 mb-1"
+      ></v-progress-linear>
     </v-row>
   </v-container>
 </template>
@@ -67,7 +76,7 @@ import LogExpenditureDialog from "./LogExpenditureDialog.vue";
 import { parse } from "vue-currency-input";
 
 export default {
-  props: ["lineItem", "LogExpenditureDialog"],
+  props: ["lineItem"],
 
   components: {
     BudgetDetailsForm,
@@ -97,6 +106,14 @@ export default {
   computed: {
     budgetedParsed() {
       return parse(this.budgeted, this.vCurrencyOptions);
+    },
+    totalExpenditures() {
+      return this.lineItem.expenditures
+        .map((expenditure) => expenditure.spent)
+        .reduce((accumulator, amount) => accumulator + amount, 0);
+    },
+    spendingProgress() {
+      return (this.totalExpenditures / this.lineItem.budgeted) * 100;
     },
   },
 
