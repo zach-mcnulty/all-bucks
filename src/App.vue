@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <app-bar @drawer="drawer = true"></app-bar>
+    <app-bar :budgetTitle="activeBudget.title" @drawer="drawer = true"></app-bar>
     <drawer :value="drawer" @input="(input) => (drawer = input)"></drawer>
 
     <v-main class="grey lighten-3">

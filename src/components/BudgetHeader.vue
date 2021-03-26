@@ -3,20 +3,15 @@
     class="white rounded-lg elevation-4"
     style="position: sticky; top: 56px"
   >
-    <v-row class="d-flex space-between">
-      <v-col class="d-flex align-center">{{ budget.title }}</v-col>
+    <v-row class="d-flex space-around">
       <v-col class="d-flex justify-center align-center">
-        <v-progress-circular
-          color="green darken-1"
-          size="100"
-          width="14"
-        ></v-progress-circular>
-      </v-col>
-      <v-col
-        class="d-flex flex-column justify-center align-end flex-md-row justify-md-end align-md-center"
-      >
-        <div v-if="!editingIncome" @click="editingIncome = true">
-          Income: {{ budget.income | currency}}
+        <div
+          v-if="!editingIncome"
+          @click="editingIncome = true"
+          class="d-flex flex-column align-center"
+        >
+          <div class="text-h6">{{ budget.income | currency }}</div>
+          <div class="caption text-uppercase">Income</div>
         </div>
         <budget-details-form
           v-else
@@ -34,7 +29,24 @@
             v-click-outside="closeIncomeForm"
           ></v-text-field>
         </budget-details-form>
-        <div>Budgeted: {{ budgeted | currency }}</div>
+      </v-col>
+      <v-col class="d-flex justify-center align-center">
+        <v-progress-circular
+          color="green darken-1"
+          size="100"
+          width="14"
+        ></v-progress-circular>
+      </v-col>
+      <v-col class="d-flex flex-column justify-center align-center">
+        <div class="d-flex flex-column align-center">
+          <div
+            :style="budgeted > budget.income ? 'color:red;' : ''"
+            class="text-h6"
+          >
+            {{ budgeted | currency }}
+          </div>
+          <div class="caption text-uppercase">Budgeted</div>
+        </div>
       </v-col>
     </v-row>
   </v-container>
