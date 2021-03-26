@@ -12,15 +12,7 @@
           <span>
             {{ lineItem.label }}
           </span>
-          <v-btn
-            :class="[screenSize === 'xs' ? 'd-block' : iconToggle, 'ml-2']"
-            height="24"
-            elevation="0"
-            fab
-            x-small
-          >
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
+          <log-expenditure-dialog :iconToggle="iconToggle"></log-expenditure-dialog>
         </div>
         <budget-details-form
           v-else
@@ -43,7 +35,7 @@
           @click="editingBudgeted = true"
           class="d-flex justify-end"
         >
-          {{ lineItem.budgeted | currency}}
+          {{ lineItem.budgeted | currency }}
         </div>
         <budget-details-form
           v-else
@@ -71,13 +63,15 @@
 
 <script>
 import BudgetDetailsForm from "./BudgetDetailsForm.vue";
+import LogExpenditureDialog from "./LogExpenditureDialog.vue";
 import { parse } from "vue-currency-input";
 
 export default {
-  props: ["lineItem"],
+  props: ["lineItem", "LogExpenditureDialog"],
 
   components: {
     BudgetDetailsForm,
+    LogExpenditureDialog,
   },
 
   data() {
@@ -101,9 +95,6 @@ export default {
   },
 
   computed: {
-    screenSize() {
-      return this.$vuetify.breakpoint.name;
-    },
     budgetedParsed() {
       return parse(this.budgeted, this.vCurrencyOptions);
     },
