@@ -3,7 +3,7 @@
     <v-container fluid class="splitColorBackground">
       <budget-header
         :budget="budget"
-        @new-budget-details-submitted="updateIncome({$event})"
+        @new-budget-details-submitted="updateIncome({ $event })"
       ></budget-header>
     </v-container>
     <category
@@ -19,6 +19,7 @@
         @new-budget-details-submitted="
           updateLineItemDetails({ $event, lineItem })
         "
+        @expenditure-submitted="logExpenditure({ ...$event, lineItem })"
       ></line-item>
     </category>
   </v-container>
@@ -29,6 +30,7 @@ import BudgetHeader from "./BudgetHeader.vue";
 import Category from "./Category.vue";
 import LineItem from "./LineItem.vue";
 import { LineItemClass } from "../modules/LineItemClass.js";
+import { Expenditure } from "../modules/Expenditure.js";
 
 export default {
   props: ["budget"],
@@ -46,9 +48,9 @@ export default {
   },
 
   methods: {
-    updateIncome({$event}) {
+    updateIncome({ $event }) {
       let income = $event;
-      return this.budget.income = income;
+      return (this.budget.income = income);
     },
     updateLineItemDetails({ $event, lineItem }) {
       let detail = $event;
@@ -64,6 +66,11 @@ export default {
     },
     createNewLineItem({ label, budgetedParsed, category }) {
       return category.lineItems.push(new LineItemClass(label, budgetedParsed));
+    },
+    logExpenditure({ merchant, amountParsed, notes, lineItem }) {
+      return lineItem.expenditures.push(
+        new Expenditure(merchant, amountParsed, notes)
+      );
     },
     // deleteLineItem(i, category) {
     //   let revisedLineItems;

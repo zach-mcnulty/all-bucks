@@ -5,14 +5,14 @@
         <div
           v-if="!editingLabel"
           @click="editingLabel = true"
-          @mouseover="iconToggle = 'd-block'"
-          @mouseleave="iconToggle = 'd-none'"
+          @mouseover="iconToggle = true"
+          @mouseleave="iconToggle = false"
           class="d-flex"
         >
           <span>
             {{ lineItem.label }}
           </span>
-          <log-expenditure-dialog :iconToggle="iconToggle"></log-expenditure-dialog>
+          <log-expenditure-dialog :iconToggle="iconToggle" v-on="$listeners"></log-expenditure-dialog>
         </div>
         <budget-details-form
           v-else
@@ -90,7 +90,7 @@ export default {
         allowNegative: false,
       },
 
-      iconToggle: "d-none",
+      iconToggle: false,
     };
   },
 
