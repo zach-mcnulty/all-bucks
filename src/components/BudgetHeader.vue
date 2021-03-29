@@ -43,7 +43,7 @@
           rotate="-90"
           background-color="grey lighten-3"
           size="100"
-          width="14"
+          width="16"
         ></v-progress-circular>
       </v-col>
       <v-col class="d-flex flex-column justify-center align-center">

@@ -26,6 +26,9 @@
           [$emit('expenditure-submitted', $event), (dialog = false)]
         "
         @cancel="dialog = false"
+        v-touch="{
+        down: () => dialog = false
+      }"
       ></log-expenditure-dialog-form>
     </v-dialog>
 
@@ -64,7 +67,7 @@
 import LogExpenditureDialogForm from "./LogExpenditureDialogForm.vue";
 
 export default {
-  props: ["iconToggle"],
+  props: ["screenSize", "iconToggle"],
 
   components: {
     LogExpenditureDialogForm,
@@ -77,9 +80,7 @@ export default {
   },
 
   computed: {
-    screenSize() {
-      return this.$vuetify.breakpoint.name;
-    },
+    
   },
 
   methods: {

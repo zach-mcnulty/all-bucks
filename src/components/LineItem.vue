@@ -1,36 +1,21 @@
 <template>
   <v-container fluid class="px-0">
     <v-row>
-      <v-col>
-        <div
-          v-if="!editingLabel"
-          @click="editingLabel = true"
-          @mouseover="iconToggle = true"
-          @mouseleave="iconToggle = false"
-          class="d-flex"
+      <v-col class="d-flex">
+        <!-- LineItemDetailsActivator displays lineItem label,
+        and label activates LineItemDetailsDialog on click -->
+        <line-item-details-activator
+          :lineItem="lineItem"
+          :budgetedParsed="budgetedParsed"
+          :totalExpenditures="totalExpenditures"
+          :screenSize="screenSize"
         >
-          <span>
-            {{ lineItem.label }}
-          </span>
-          <log-expenditure-dialog
-            :iconToggle="iconToggle"
-            v-on="$listeners"
-          ></log-expenditure-dialog>
-        </div>
-        <budget-details-form
-          v-else
-          :value="label"
-          @new-budget-details-submitted="
-            [
-              $emit('new-budget-details-submitted', label),
-              (editingLabel = false),
-            ]
-          "
-          @cancel="editingLabel = false"
-          v-click-outside="closeLabelForm"
-        >
-          <v-text-field v-model="label"></v-text-field>
-        </budget-details-form>
+        </line-item-details-activator>
+        <log-expenditure-dialog
+          :screenSize="screenSize"
+          :iconToggle="iconToggle"
+          v-on="$listeners"
+        ></log-expenditure-dialog>
       </v-col>
       <v-col>
         <div
@@ -52,10 +37,14 @@
           @cancel="[(editingBudgeted = false)]"
           v-click-outside="closeBudgetedForm"
         >
-          <v-text-field
-            v-currency="vCurrencyOptions"
+          <input
+            type="text"
             v-model="budgeted"
-          ></v-text-field>
+            v-currency="vCurrencyOptions"
+            placeholder="Amount"
+            ref="budgetedInput"
+            style="border:none;width:100%;"
+          >
         </budget-details-form>
       </v-col>
 
@@ -77,8 +66,10 @@
 </template>
 
 <script>
-import BudgetDetailsForm from "./BudgetDetailsForm.vue";
-import LogExpenditureDialog from "./LogExpenditureDialog.vue";
+import BudgetDetailsForm from "./BudgetDetailsForm";
+import LogExpenditureDialog from "./LogExpenditureDialog";
+import LineItemDetailsActivator from "./LineItemDetailsActivator";
+
 import { parse } from "vue-currency-input";
 
 export default {
@@ -87,11 +78,12 @@ export default {
   components: {
     BudgetDetailsForm,
     LogExpenditureDialog,
+    LineItemDetailsActivator,
   },
 
   data() {
     return {
-      editingLabel: false,
+      lineItemDetailsDialog: false,
       label: "",
 
       editingBudgeted: false,
@@ -121,6 +113,9 @@ export default {
     spendingProgress() {
       return (this.totalExpenditures / this.lineItem.budgeted) * 100;
     },
+    screenSize() {
+      return this.$vuetify.breakpoint.name;
+    },
   },
 
   methods: {
@@ -134,6 +129,16 @@ export default {
         this.editingLabel = false;
       });
     },
+  },
+
+  watch: {
+    editingBudgeted: function() {
+      if (this.editingBudgeted) {
+        this.$nextTick(() => {
+          this.$refs.budgetedInput.focus();
+        })
+      }
+    }
   },
 
   filters: {
