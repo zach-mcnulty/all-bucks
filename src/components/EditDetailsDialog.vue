@@ -35,7 +35,6 @@
                   type="submit"
                   elevation="1"
                   block
-                  
                   height="25"
                   color="blue"
                   dark
@@ -46,7 +45,6 @@
                   @click="[(dialog = false), (input = '')]"
                   elevation="1"
                   block
-                  
                   height="25"
                   >Cancel</v-btn
                 >

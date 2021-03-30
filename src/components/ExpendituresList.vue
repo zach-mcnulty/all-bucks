@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid @click="dialog=true" class="grey lighten-3 my-1">
     <v-row>
       <v-col cols="2">{{ expenditure.timeLogged | date }}</v-col>
       <v-col cols="6"
@@ -10,12 +10,37 @@
         expenditure.spent | currency
       }}</v-col>
     </v-row>
+
+    <v-dialog v-model="dialog" fullscreen transition="dialog-bottom-transition">
+      <log-expenditure-dialog-form
+      :purpose="'edit'" 
+        :screenSize="screenSize"
+        @expenditure-submitted="
+          [$emit('expenditure-submitted', $event), (dialog = false)]
+        "
+        @cancel="dialog = false"
+        v-touch="{
+        down: () => dialog = false
+      }"
+      ></log-expenditure-dialog-form>
+    </v-dialog>
   </v-container>
 </template>
 
 <script>
+import LogExpenditureDialogForm from "./LogExpenditureDialogForm.vue";
 export default {
-  props: ["expenditure"],
+  props: ["expenditure", "screenSize"],
+
+  components: {
+    LogExpenditureDialogForm
+  },
+
+  data() {
+    return {
+      dialog: false
+    }
+  },
 
   filters: {
     currency: function (num) {

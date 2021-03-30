@@ -21,6 +21,7 @@
         </v-btn>
       </template>
       <log-expenditure-dialog-form
+        :purpose="purpose"
         :screenSize="screenSize"
         @expenditure-submitted="
           [$emit('expenditure-submitted', $event), (dialog = false)]
@@ -53,6 +54,7 @@
         </v-btn>
       </template>
       <log-expenditure-dialog-form
+        :purpose="'log'"
         :screenSize="screenSize"
         @expenditure-submitted="
           [$emit('expenditure-submitted', $event), (dialog = false)]
@@ -67,7 +69,7 @@
 import LogExpenditureDialogForm from "./LogExpenditureDialogForm.vue";
 
 export default {
-  props: ["screenSize", "iconToggle"],
+  props: ["purpose", "screenSize", "iconToggle"],
 
   components: {
     LogExpenditureDialogForm,

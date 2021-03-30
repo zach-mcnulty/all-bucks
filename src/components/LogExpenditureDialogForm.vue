@@ -1,16 +1,10 @@
 <template>
   <v-card>
     <v-card-title
-      class="green pa-0"
+      class="green white--text pa-3"
       :style="screenSize === 'xs' ? 'height:56px;' : 'height:64px;'"
     >
-      <div
-        class="d-flex justify-space-between align-center px-3"
-        style="width: 100%"
-      >
-        <div class="white--text font-weight-light">Log an Expenditure</div>
-        <v-spacer></v-spacer>
-      </div>
+      {{ purpose === "log" ? "Log an Expenditure" : "Edit Expenditure" }}
     </v-card-title>
     <v-container>
       <v-row>
@@ -48,8 +42,12 @@
               autocomplete="off"
             ></v-textarea>
             <div class="d-flex flex-column">
-              <v-btn @click="[$emit('cancel'), clearInputs()]" block>Cancel</v-btn>
-              <v-btn type="submit" block color="primary" class="mt-3">Save</v-btn>
+              <v-btn @click="[$emit('cancel'), clearInputs()]" block
+                >Cancel</v-btn
+              >
+              <v-btn type="submit" block color="primary" class="mt-3"
+                >Save</v-btn
+              >
             </div>
           </v-form>
         </v-col>
@@ -64,7 +62,7 @@
 import { parse } from "vue-currency-input";
 
 export default {
-  props: ["screenSize"],
+  props: ["purpose", "screenSize"],
 
   data() {
     return {
