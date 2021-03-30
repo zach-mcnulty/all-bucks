@@ -9,6 +9,7 @@
           :budgetedParsed="budgetedParsed"
           :totalExpenditures="totalExpenditures"
           :screenSize="screenSize"
+          v-on="$listeners"
         >
         </line-item-details-activator>
         <log-expenditure-dialog
@@ -19,33 +20,10 @@
       </v-col>
       <v-col>
         <div
-          v-if="!editingBudgeted"
-          @click="editingBudgeted = true"
           class="d-flex justify-end"
         >
           {{ lineItem.budgeted | currency }}
         </div>
-        <budget-details-form
-          v-else
-          :value="budgeted"
-          @new-budget-details-submitted="
-            [
-              $emit('new-budget-details-submitted', budgetedParsed),
-              (editingBudgeted = false),
-            ]
-          "
-          @cancel="[(editingBudgeted = false)]"
-          v-click-outside="closeBudgetedForm"
-        >
-          <input
-            type="text"
-            v-model="budgeted"
-            v-currency="vCurrencyOptions"
-            placeholder="Amount"
-            ref="budgetedInput"
-            style="border:none;width:100%;"
-          >
-        </budget-details-form>
       </v-col>
 
       <v-progress-linear
@@ -66,7 +44,6 @@
 </template>
 
 <script>
-import BudgetDetailsForm from "./BudgetDetailsForm";
 import LogExpenditureDialog from "./LogExpenditureDialog";
 import LineItemDetailsActivator from "./LineItemDetailsActivator";
 
@@ -76,7 +53,6 @@ export default {
   props: ["lineItem"],
 
   components: {
-    BudgetDetailsForm,
     LogExpenditureDialog,
     LineItemDetailsActivator,
   },
@@ -84,19 +60,6 @@ export default {
   data() {
     return {
       lineItemDetailsDialog: false,
-      label: "",
-
-      editingBudgeted: false,
-      budgeted: "",
-      vCurrencyOptions: {
-        locale: "en",
-        currency: "USD",
-        distractionFree: true,
-        autoDecimalMode: true,
-        valueRange: { min: 0 },
-        allowNegative: false,
-      },
-
       iconToggle: false,
     };
   },
@@ -129,16 +92,6 @@ export default {
         this.editingLabel = false;
       });
     },
-  },
-
-  watch: {
-    editingBudgeted: function() {
-      if (this.editingBudgeted) {
-        this.$nextTick(() => {
-          this.$refs.budgetedInput.focus();
-        })
-      }
-    }
   },
 
   filters: {

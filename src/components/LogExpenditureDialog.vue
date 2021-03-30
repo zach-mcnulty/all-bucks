@@ -84,9 +84,7 @@ export default {
   },
 
   methods: {
-    testFn(event) {
-      console.log(event);
-    },
+    //
   },
 };
 </script>

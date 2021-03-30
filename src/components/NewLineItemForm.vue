@@ -9,34 +9,40 @@
       <v-text-field
         v-model="label"
         height="24"
+        autofocus
         required
+        autocomplete="off"
         placeholder="Label"
+        dense
         class="mr-1"
-        style="width: 50%"
+        full-width
       ></v-text-field>
       <v-text-field
         v-currency="vCurrencyOptions"
         v-model="budgeted"
         height="24"
         required
+        autocomplete="off"
         placeholder="Amount"
-        style="width: 50%"
+        dense
+        full-width
       >
       </v-text-field>
     </div>
 
-    <div class="d-flex">
+    <div class="d-flex" style="width: 100%">
       <v-btn
         v-if="label && budgeted"
         type="submit"
         elevation="1"
-        x-small
-        rounded
-        text
-        ><v-icon>mdi-check</v-icon></v-btn
+        block
+        height="25"
+        color="blue"
+        dark
+        >Create</v-btn
       >
-      <v-btn v-else @click="$emit('cancel')" elevation="1" x-small rounded text
-        ><v-icon>mdi-close</v-icon></v-btn
+      <v-btn v-else @click="$emit('cancel')" elevation="1" block height="25"
+        >Cancel</v-btn
       >
     </div>
   </form>
@@ -49,7 +55,7 @@ export default {
   data() {
     return {
       label: "",
-      budgeted: 0,
+      budgeted: "",
 
       vCurrencyOptions: {
         locale: "en",
@@ -65,6 +71,14 @@ export default {
   computed: {
     budgetedParsed() {
       return parse(this.budgeted, this.vCurrencyOptions);
+    },
+  },
+
+  watch: {
+    budgetedParsed: function () {
+      if (this.budgetedParsed === 0) {
+        return (this.budgetedParsed = "");
+      }
     },
   },
 };

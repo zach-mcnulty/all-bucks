@@ -3,7 +3,7 @@
     <v-container fluid class="splitColorBackground">
       <budget-header
         :budget="budget"
-        @new-budget-details-submitted="updateIncome({ $event })"
+        @details-updated="updateIncome($event)"
       ></budget-header>
     </v-container>
     <category
@@ -20,6 +20,7 @@
           updateLineItemDetails({ $event, lineItem })
         "
         @expenditure-submitted="logExpenditure({ ...$event, lineItem })"
+        @details-updated="updateDetails({...$event, lineItem})"
       ></line-item>
     </category>
   </v-container>
@@ -48,8 +49,8 @@ export default {
   },
 
   methods: {
-    updateIncome({ $event }) {
-      let income = $event;
+    updateIncome({ input }) {
+      let income = input;
       return (this.budget.income = income);
     },
     updateLineItemDetails({ $event, lineItem }) {
@@ -72,6 +73,15 @@ export default {
         new Expenditure(merchant, amountParsed, notes)
       );
     },
+    updateDetails({input, purpose, lineItem}) {
+      if (purpose === "Label") {
+        return lineItem.label = input;
+      } else if (purpose === "Budgeted") {
+        return lineItem.budgeted = input;
+      } else {
+        return this.budget.income = input;
+      }
+    }
     // deleteLineItem(i, category) {
     //   let revisedLineItems;
 

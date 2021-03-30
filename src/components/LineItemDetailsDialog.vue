@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title
-      class="green pa-0"
+      class="green pa-0" id="lineItemDetailsDialogTitle"
       :style="screenSize === 'xs' ? 'height:56px;' : 'height:64px;'"
     >
       <div
@@ -18,76 +18,67 @@
             fab
             x-small
             rounded
-            ><v-icon>mdi-close</v-icon></v-btn
-          >
-          <v-btn
-            @click="
-              $emit('expenditure-submitted', { merchant, amountParsed, notes })
-            "
-            class="ml-2"
-            elevation="1"
-            fab
-            x-small
-            rounded
-            ><v-icon>mdi-check</v-icon></v-btn
+            ><v-icon>mdi-chevron-down</v-icon></v-btn
           >
         </v-card-actions>
       </div>
     </v-card-title>
+
     <v-container fluid>
       <v-row class="d-flex align-center">
-        <v-col cols="2">
-          <v-progress-circular
-            :value="spendingProgress"
-            :color="
-              spendingProgress <= 100
-                ? spendingProgress >= 75
-                  ? 'yellow'
-                  : 'green'
-                : 'red'
-            "
-            rotate="-90"
-            background-color="grey lighten-3"
-            size="50"
-            width="6"
-          ></v-progress-circular>
-        </v-col>
-        <v-col cols="7">
-          <span class="text-h6 font-weight-bold">{{ lineItem.label }}</span>
-          <div style="font-size: 0.9rem">
-            {{ totalExpenditures | currency }} of
-            {{ lineItem.budgeted | currency }}
+        <v-col>
+          <div class="d-flex flex-column justify-center align-start">
+            <div class="d-flex">
+              <div style="font-size: 0.9rem">Label</div>
+              <edit-details-dialog :purpose="'Label'" v-on="$listeners" origin="center 36px"></edit-details-dialog>
+
+
+            </div>
+            <span class="text-h5 font-weight-light">{{
+              lineItem.label
+            }}</span>
           </div>
         </v-col>
-        <v-col cols="3" class="d-flex flex-column align-end">
+        <v-col>
+          <div class="d-flex flex-column justify-center align-center">
+            <div class="d-flex">
+              <div style="font-size: 0.9rem">Budgeted</div>
+              <edit-details-dialog :purpose="'Budgeted'" v-on="$listeners"></edit-details-dialog>
+
+
+            </div>
+            <div class="text-h5 font-weight-light">
+              {{ lineItem.budgeted | currency }}
+            </div>
+          </div>
+        </v-col>
+        <v-col class="d-flex flex-column justify-center align-end">
           <span style="font-size: 0.9rem">Remaining</span>
           <span class="text-h5 font-weight-light">{{
             remaining | currency
           }}</span>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col>
-          <v-btn block dark color="primary">Edit Line Item Label</v-btn> </v-col>
-      </v-row>
-      <v-row>
-        <v-col> <v-btn block dark color="primary"> Edit Budgeted Amount </v-btn></v-col>
-      </v-row>
-      <v-row>
-        <v-col> <v-btn block dark color="red">Delete Line Item</v-btn> </v-col>
-      </v-row>
     </v-container>
     <v-container fluid>
       <v-row>
-        <v-col>Expenditures</v-col>
+        <v-col class="d-flex align-center">
+          <span class="font-weight-bold">Expenditures</span>
+          <log-expenditure-dialog :screenSize="screenSize" v-on="$listeners"></log-expenditure-dialog>
+        </v-col>
       </v-row>
     </v-container>
-    <expenditures-list
-      v-for="(expenditure, i) in lineItem.expenditures"
-      :key="i"
-      :expenditure="expenditure"
-    >
-    </expenditures-list>
+    <div v-if="lineItem.expenditures.length">
+      <expenditures-list
+        v-for="(expenditure, i) in lineItem.expenditures"
+        :key="i"
+        :expenditure="expenditure"
+      >
+      </expenditures-list>
+    </div>
+    <div v-else class="d-flex justify-center">
+      <div class="text--disabled">No expenditures logged</div>
+    </div>
 
     <v-divider></v-divider>
 
@@ -107,6 +98,8 @@
 </template>
 
 <script>
+import EditDetailsDialog from "./EditDetailsDialog.vue";
+import LogExpenditureDialog from "./LogExpenditureDialog.vue";
 import ExpendituresList from "./ExpendituresList.vue";
 
 export default {
@@ -114,6 +107,15 @@ export default {
 
   components: {
     ExpendituresList,
+    EditDetailsDialog,
+    LogExpenditureDialog,
+  },
+
+  data() {
+    return {
+      editingLabel: false,
+      editingBudgeted: false,
+    };
   },
 
   computed: {

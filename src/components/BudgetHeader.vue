@@ -6,29 +6,14 @@
     <v-row class="d-flex space-around">
       <v-col class="d-flex justify-center align-center">
         <div
-          v-if="!editingIncome"
-          @click="editingIncome = true"
           class="d-flex flex-column align-center"
         >
           <div class="text-h6">{{ budget.income | currency }}</div>
-          <div class="caption text-uppercase">Income</div>
+          <div class="d-flex">
+            <span class="caption text-uppercase">Income</span>
+            <edit-details-dialog :purpose="'Income'" v-on="$listeners"></edit-details-dialog>
+          </div>
         </div>
-        <budget-details-form
-          v-else
-          :value="income"
-          @new-budget-details-submitted="
-            [
-              $emit('new-budget-details-submitted', parsedIncome),
-              (editingIncome = false),
-            ]
-          "
-        >
-          <v-text-field
-            v-model="income"
-            v-currency="vCurrencyOptions"
-            v-click-outside="closeIncomeForm"
-          ></v-text-field>
-        </budget-details-form>
       </v-col>
       <v-col class="d-flex justify-center align-center">
         <v-progress-circular
@@ -62,14 +47,14 @@
 </template>
 
 <script>
-import BudgetDetailsForm from "./BudgetDetailsForm.vue";
+import EditDetailsDialog from "./EditDetailsDialog.vue";
 import { parse } from "vue-currency-input";
 
 export default {
   props: ["budget"],
 
   components: {
-    BudgetDetailsForm,
+    EditDetailsDialog,
   },
 
   data() {
@@ -129,7 +114,7 @@ export default {
   },
 
   filters: {
-    currency: function (num) {
+    currency: function(num) {
       return num.toLocaleString("en-US", {
         style: "currency",
         currency: "USD",

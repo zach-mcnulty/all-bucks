@@ -18,6 +18,7 @@
         :totalExpenditures="totalExpenditures"
         :spendingProgress="spendingProgress"
         :screenSize="screenSize"
+        v-on="$listeners"
         @cancel="dialog = false"
         v-touch="{
           down: () => (dialog = false),
