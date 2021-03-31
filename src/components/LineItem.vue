@@ -1,44 +1,61 @@
 <template>
   <v-container fluid class="px-0">
-    <v-row>
-      <v-col class="d-flex">
-        <!-- LineItemDetailsActivator displays lineItem label,
-        and label activates LineItemDetailsDialog on click -->
-        <line-item-details-activator
-          :lineItem="lineItem"
-          :budgetedParsed="budgetedParsed"
-          :totalExpenditures="totalExpenditures"
-          :screenSize="screenSize"
-          v-on="$listeners"
-        >
-        </line-item-details-activator>
-        <log-expenditure-dialog
-          :screenSize="screenSize"
-          :iconToggle="iconToggle"
-          v-on="$listeners"
-        ></log-expenditure-dialog>
+    <v-row style="overflow:hidden;">
+      <v-col class="px-0">
+        <v-container fluid v-touch="{
+          left: () => swipedLeft = true,
+          right: () => swipedLeft = false
+        }">
+          <v-row>
+            <v-col class="d-flex">
+              <!-- LineItemDetailsActivator displays lineItem label,
+              and label activates LineItemDetailsDialog on click -->
+              <line-item-details-activator
+                :lineItem="lineItem"
+                :budgetedParsed="budgetedParsed"
+                :totalExpenditures="totalExpenditures"
+                :screenSize="screenSize"
+                v-on="$listeners"
+              >
+              </line-item-details-activator>
+              <log-expenditure-dialog
+                :screenSize="screenSize"
+                :iconToggle="iconToggle"
+                v-on="$listeners"
+              ></log-expenditure-dialog>
+            </v-col>
+            <v-col>
+              <div class="d-flex justify-end">
+                {{ lineItem.budgeted | currency }}
+              </div>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-progress-linear
+              :value="spendingProgress"
+              :color="
+                spendingProgress <= 100
+                  ? spendingProgress >= 75
+                    ? 'yellow'
+                    : 'green'
+                  : 'red'
+              "
+              background-color="grey lighten-3"
+              rounded
+              class="mx-2 mb-1"
+            ></v-progress-linear>
+          </v-row>
+        </v-container>
       </v-col>
-      <v-col>
-        <div
-          class="d-flex justify-end"
-        >
-          {{ lineItem.budgeted | currency }}
-        </div>
-      </v-col>
-
-      <v-progress-linear
-        :value="spendingProgress"
-        :color="
-          spendingProgress <= 100
-            ? spendingProgress >= 75
-              ? 'yellow'
-              : 'green'
-            : 'red'
-        "
-        background-color="grey lighten-3"
-        rounded
-        class="mx-2 mb-1"
-      ></v-progress-linear>
+      <transition appear enter-active-class="animate__animated animate__slideInRight animate__faster" leave-active-class="animate__animated animate__slideOutRight animate__faster">
+        <v-col v-if="swipedLeft" cols="2" class="px-0 ma-0">
+          <div class="d-flex justify-center align-center" style="width:100%;height:52.77px;background:red;">
+            <button type="button">
+              <v-icon medium dark>mdi-delete</v-icon>
+            </button>
+          </div>
+        </v-col>
+      </transition>
     </v-row>
   </v-container>
 </template>
@@ -61,6 +78,7 @@ export default {
     return {
       lineItemDetailsDialog: false,
       iconToggle: false,
+      swipedLeft: false
     };
   },
 

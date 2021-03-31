@@ -32,7 +32,6 @@
               <edit-details-dialog
                 :purpose="'Label'"
                 v-on="$listeners"
-                origin="center 36px"
               ></edit-details-dialog>
             </div>
             <span class="text-h5 font-weight-light">{{
@@ -137,6 +136,8 @@ export default {
     trimmer(str) {
       if (str.length > 5) {
         return str.slice(0, 5) + "...";
+      } else {
+        return str;
       }
     },
   },
