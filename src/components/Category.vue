@@ -1,10 +1,10 @@
 <template>
-  <v-container fluid class="my-2 white">
+  <v-container fluid class="my-2 pr-0 white" style="overflow:hidden;">
     <v-row>
       <v-col class="font-weight-bold text-uppercase">{{
         category.label
       }}</v-col>
-      <v-col class="d-flex justify-end caption text-uppercase"
+      <v-col class="d-flex justify-end caption text-uppercase mr-3"
         >Planned</v-col
       >
     </v-row>

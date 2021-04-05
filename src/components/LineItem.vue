@@ -1,64 +1,81 @@
 <template>
-  <v-container fluid class="px-0">
-    <v-row style="overflow:hidden;">
-      <transition enter-active-class="animate__animated animate__slideInRight animate__faster" leave-active-class="animate__animated animate__slideOutRight animate__faster">
-      <v-col class="px-0">
-        <v-container fluid v-touch="{
-          left: () => swipedLeft = true,
-          right: () => swipedLeft = false
-        }">
-          <v-row>
-            <v-col class="d-flex">
-              <!-- LineItemDetailsActivator displays lineItem label,
-              and label activates LineItemDetailsDialog on click -->
-              <line-item-details-activator
-                :lineItem="lineItem"
-                :budgetedParsed="budgetedParsed"
-                :totalExpenditures="totalExpenditures"
-                :screenSize="screenSize"
-                :swipedLeft="swipedLeft"
-                v-on="$listeners"
-              >
-              </line-item-details-activator>
-              <log-expenditure-dialog
-                :screenSize="screenSize"
-                :iconToggle="iconToggle"
-                v-on="$listeners"
-              ></log-expenditure-dialog>
-            </v-col>
+  <v-container fluid class="pa-0 my-2" style="overflow: hidden">
+    <v-row class="d-flex flex-nowrap">
+      <v-col
+        :cols="!swipedLeft ? 12 : 10"
+        class="slide"
+        @transitionstart="updateLabel($event.type)"
+        @transitionend="updateLabel($event.type)"
+      >
+        <v-container fluid class="pa-0">
+          <v-row
+            class="d-flex"
+            v-touch="{
+              left: () => (swipedLeft = true),
+              right: () => (swipedLeft = false),
+            }"
+          >
             <v-col>
-              <div class="d-flex justify-end">
-                {{ lineItem.budgeted | currency }}
+              <div class="d-flex">
+                <!-- LineItemDetailsActivator displays lineItem label,
+            and label activates LineItemDetailsDialog on click -->
+                <line-item-details-activator
+                  :lineItem="lineItem"
+                  :label="label"
+                  :budgetedParsed="budgetedParsed"
+                  :totalExpenditures="totalExpenditures"
+                  :screenSize="screenSize"
+                  :swipedLeft="swipedLeft"
+                  v-on="$listeners"
+                >
+                </line-item-details-activator>
+
+                <log-expenditure-dialog
+                  :screenSize="screenSize"
+                  :iconToggle="iconToggle"
+                  v-on="$listeners"
+                ></log-expenditure-dialog>
               </div>
+            </v-col>
+            <v-col class="d-flex justify-end mr-3">
+              {{ lineItem.budgeted | currency }}
             </v-col>
           </v-row>
           <v-row>
-            <v-progress-linear
-              :value="spendingProgress"
-              :color="
-                spendingProgress <= 100
-                  ? spendingProgress >= 75
-                    ? 'yellow'
-                    : 'green'
-                  : 'red'
-              "
-              background-color="grey lighten-3"
-              rounded
-              class="mx-2 mb-1"
-            ></v-progress-linear>
+            <v-col class="d-flex justify-center align-center pt-1 mr-3">
+              <v-progress-linear
+                :value="spendingProgress"
+                :color="
+                  spendingProgress <= 100
+                    ? spendingProgress >= 75
+                      ? 'yellow'
+                      : 'green'
+                    : 'red'
+                "
+                background-color="grey lighten-3"
+                rounded
+                class="mb-1"
+              ></v-progress-linear>
+            </v-col>
           </v-row>
         </v-container>
       </v-col>
-      </transition>
-      <transition appear enter-active-class="animate__animated animate__slideInRight animate__faster" leave-active-class="animate__animated animate__slideOutRight animate__faster">
-        <v-col v-if="swipedLeft" cols="2" class="px-0 ma-0">
-          <div class="d-flex justify-center align-center" style="width:100%;height:52.77px;background:red;">
-            <button type="button">
-              <v-icon medium dark>mdi-delete</v-icon>
-            </button>
-          </div>
-        </v-col>
-      </transition>
+      <v-col cols="2" class="pa-0">
+        <!-- In order to get the button to appear at the edge of the screen,
+        I had to eliminate the right padding on the Category component, and 
+        add padding back onto "PLANNED" at the top of each Category, to the 
+        budgeted column in LineItem, as well as the progress bar and to the
+        NewLineItemForm component-->
+        <button
+          type="button"
+          class="red fill-height d-flex justify-center align-center"
+          style="width: 100%"
+        >
+          <v-icon @click="$emit('delete-line-item')" medium dark class="mr-2"
+            >mdi-delete</v-icon
+          >
+        </button>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -81,7 +98,8 @@ export default {
     return {
       lineItemDetailsDialog: false,
       iconToggle: false,
-      swipedLeft: false
+      swipedLeft: undefined,
+      label: this.lineItem.label,
     };
   },
 
@@ -103,6 +121,16 @@ export default {
   },
 
   methods: {
+    //updateLabel prevents label from wrapping when delete button is revealed
+    updateLabel(event) {
+      if (event === "transitionstart" && this.swipedLeft) {
+        if (this.label.length > 8) {
+          return this.label = this.label.slice(0, 8) + '...';
+        }
+      } else if (event === "transitionend" && !this.swipedLeft) {
+        return this.label = this.lineItem.label;
+      }
+    },
     closeBudgetedForm() {
       return this.$nextTick(() => {
         this.editingBudgeted = false;
@@ -126,8 +154,8 @@ export default {
 };
 </script>
 
-<style scoped>
-.lineItem {
-  transition: all .5s;
+<style>
+.slide {
+  transition: all 0.5s ease;
 }
 </style>

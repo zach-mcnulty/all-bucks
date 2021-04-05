@@ -3,7 +3,7 @@
     @submit.prevent="
       $emit('new-line-item-submitted', { label, budgetedParsed })
     "
-    class="d-flex flex-column align-end"
+    class="d-flex flex-column align-end pr-3"
   >
     <div class="d-flex" style="width: 100%">
       <v-text-field

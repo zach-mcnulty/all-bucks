@@ -21,6 +21,7 @@
         "
         @expenditure-submitted="logExpenditure({ ...$event, lineItem })"
         @details-updated="updateDetails({...$event, lineItem})"
+        @delete-line-item="deleteLineItem({category, i})"
       ></line-item>
     </category>
   </v-container>
@@ -81,17 +82,17 @@ export default {
       } else {
         return this.budget.income = input;
       }
-    }
-    // deleteLineItem(i, category) {
-    //   let revisedLineItems;
+    },
+    deleteLineItem({category, i}) {
+      let revisedLineItems;
 
-    //   let lineItems_pre = category.lineItems.slice(0, i);
-    //   let lineItems_post = category.lineItems.slice(i + 1);
+      let lineItems_upTo = category.lineItems.splice(0, i);
+      let lineItems_after = category.lineItems.splice(i + 1);
 
-    //   revisedLineItems = lineItems_pre.concat(lineItems_post);
+      revisedLineItems = lineItems_upTo.concat(lineItems_after);
 
-    //   return (category.lineItems = revisedLineItems);
-    // },
+      return (category.lineItems = revisedLineItems);
+    },
   },
 };
 </script>
