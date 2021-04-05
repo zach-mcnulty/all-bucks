@@ -1,6 +1,7 @@
 <template>
   <v-container fluid class="px-0">
     <v-row style="overflow:hidden;">
+      <transition enter-active-class="animate__animated animate__slideInRight animate__faster" leave-active-class="animate__animated animate__slideOutRight animate__faster">
       <v-col class="px-0">
         <v-container fluid v-touch="{
           left: () => swipedLeft = true,
@@ -15,6 +16,7 @@
                 :budgetedParsed="budgetedParsed"
                 :totalExpenditures="totalExpenditures"
                 :screenSize="screenSize"
+                :swipedLeft="swipedLeft"
                 v-on="$listeners"
               >
               </line-item-details-activator>
@@ -47,6 +49,7 @@
           </v-row>
         </v-container>
       </v-col>
+      </transition>
       <transition appear enter-active-class="animate__animated animate__slideInRight animate__faster" leave-active-class="animate__animated animate__slideOutRight animate__faster">
         <v-col v-if="swipedLeft" cols="2" class="px-0 ma-0">
           <div class="d-flex justify-center align-center" style="width:100%;height:52.77px;background:red;">
@@ -123,5 +126,8 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.lineItem {
+  transition: all .5s;
+}
 </style>

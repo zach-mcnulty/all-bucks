@@ -9,7 +9,7 @@
     >
       <template v-slot:activator="{ on, attrs }">
         <span v-bind="attrs" v-on="on">
-          {{ lineItem.label }}
+          {{ lineItemLabel}}
         </span>
       </template>
       <line-item-details-dialog
@@ -40,7 +40,8 @@ export default {
     "budgetedParsed",
     "totalExpenditures",
     "spendingProgress",
-    "screenSize"
+    "screenSize",
+    "swipedLeft"
   ],
 
   components: {
@@ -52,6 +53,18 @@ export default {
       dialog: false,
     };
   },
+
+  computed: {
+    lineItemLabel() {
+      let label = this.lineItem.label;
+
+      if (this.swipedLeft && label.length > 8) {
+        return label.slice(0, 8) + '...';
+      } else {
+        return label;
+      }
+    }
+  }
 };
 </script>
 
