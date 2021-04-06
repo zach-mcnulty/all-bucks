@@ -1,14 +1,16 @@
 <template>
   <v-container fluid class="pa-0 my-6">
     <v-row
+      v-touch="{
+        left: () => (showDelete = true),
+        right: () => (showDelete = false),
+      }"
       class="d-flex flex-nowrap slide"
       style="position: relative"
-      :style="showDelete ? { right: deleteBtnWidth } : {right: '0px'}"
+      :style="showDelete ? { right: deleteBtnWidth } : { right: '0px' }"
     >
-      <v-col
-        cols="12"
-      >
-        <v-container fluid class="pa-0">
+      <v-col cols="12">
+        <!-- <v-container fluid class="pa-0">
           <v-row
             class="d-flex"
             v-touch="{
@@ -16,19 +18,19 @@
               right: () => (showDelete = false),
             }"
           >
-            <v-col cols="8" class="d-flex mx-0 py-0">
-              <!-- LineItemDetailsActivator displays lineItem label,
-            and label activates LineItemDetailsDialog on click -->
-              <line-item-details-activator
-                :lineItem="lineItem"
-                :budgetedParsed="budgetedParsed"
-                :totalExpenditures="totalExpenditures"
-                :screenSize="screenSize"
-                v-on="$listeners"
-              >
-              </line-item-details-activator>
+            <v-col cols="8" class="d-flex mx-0 py-0"> -->
 
-              <log-expenditure-dialog
+        <line-item-details-activator
+          :lineItem="lineItem"
+          :budgetedParsed="budgetedParsed"
+          :totalExpenditures="totalExpenditures"
+          :screenSize="screenSize"
+          v-on="$listeners"
+          :deleteShowing="showDelete"
+        >
+        </line-item-details-activator>
+
+        <!-- <log-expenditure-dialog
                 :screenSize="screenSize"
                 :iconToggle="iconToggle"
                 v-on="$listeners"
@@ -55,9 +57,13 @@
               ></v-progress-linear>
             </v-col>
           </v-row>
-        </v-container>
+        </v-container> -->
       </v-col>
-      <v-col cols="2" v-click-outside="hideDelete" class="d-flex justify-center pa-0">
+      <v-col
+        cols="2"
+        v-click-outside="hideDelete"
+        class="d-flex justify-center pa-0"
+      >
         <button type="button" class="red" style="height: 100%; width: 100%">
           <v-icon @click="$emit('delete-line-item')" medium dark
             >mdi-delete</v-icon
@@ -69,7 +75,7 @@
 </template>
 
 <script>
-import LogExpenditureDialog from "./LogExpenditureDialog";
+//import LogExpenditureDialog from "./LogExpenditureDialog";
 import LineItemDetailsActivator from "./LineItemDetailsActivator";
 
 import { parse } from "vue-currency-input";
@@ -78,7 +84,7 @@ export default {
   props: ["lineItem"],
 
   components: {
-    LogExpenditureDialog,
+    //LogExpenditureDialog,
     LineItemDetailsActivator,
   },
 
@@ -86,7 +92,7 @@ export default {
     return {
       lineItemDetailsDialog: false,
       iconToggle: false,
-      showDelete: false
+      showDelete: false,
     };
   },
 
@@ -113,28 +119,9 @@ export default {
   methods: {
     hideDelete() {
       if (this.showDelete) {
-        return this.showDelete = false;
+        return (this.showDelete = false);
       }
-    },
-    closeBudgetedForm() {
-      return this.$nextTick(() => {
-        this.editingBudgeted = false;
-      });
-    },
-    closeLabelForm() {
-      return this.$nextTick(() => {
-        this.editingLabel = false;
-      });
-    },
-  },
-
-  filters: {
-    currency: function (num) {
-      return num.toLocaleString("en-US", {
-        style: "currency",
-        currency: "USD",
-      });
-    },
+    }
   },
 };
 </script>
