@@ -4,6 +4,7 @@
     <v-dialog
       v-if="screenSize === 'xs'"
       v-model="dialog"
+      :disabled="disable"
       fullscreen
       transition="dialog-bottom-transition"
     >
@@ -69,7 +70,7 @@
 import LogExpenditureDialogForm from "./LogExpenditureDialogForm.vue";
 
 export default {
-  props: ["purpose", "screenSize", "iconToggle"],
+  props: ["purpose", "screenSize", "iconToggle", "disable"],
 
   components: {
     LogExpenditureDialogForm,

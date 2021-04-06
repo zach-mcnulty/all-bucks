@@ -6,12 +6,14 @@
     transition="dialog-bottom-transition"
     :disabled="disabled"
   >
+
     <template v-slot:activator="{ on, attrs }">
       <v-container v-bind="attrs" v-on="on" fluid class="pa-0">
         <v-row class="d-flex">
           <v-col cols="8" class="d-flex mx-0 py-0">
             <div>{{ lineItem.label }}</div>
             <log-expenditure-dialog
+              :disable="disabled"
               :screenSize="screenSize"
               v-on="$listeners"
             ></log-expenditure-dialog>
@@ -21,16 +23,10 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col class="d-flex justify-center py-0">
+          <v-col class="d-flex justify-center mt-1 py-0">
             <v-progress-linear
               :value="spendingProgress"
-              :color="
-                spendingProgress <= 100
-                  ? spendingProgress >= 75
-                    ? 'yellow'
-                    : 'green'
-                  : 'red'
-              "
+              :color="spendingProgress <= 100 ? 'green' : 'red'"
               background-color="grey lighten-3"
               rounded
               class="mt-2"
@@ -38,15 +34,11 @@
           </v-col>
         </v-row>
       </v-container>
-      <!-- <span v-bind="attrs" v-on="on">
-          {{lineItem.label}}
-        </span> -->
     </template>
+
     <line-item-details-dialog
       :lineItem="lineItem"
-      :budgetedParsed="budgetedParsed"
       :totalExpenditures="totalExpenditures"
-      :spendingProgress="spendingProgress"
       :screenSize="screenSize"
       v-on="$listeners"
       @cancel="dialog = false"
@@ -64,12 +56,10 @@ import LineItemDetailsDialog from "./LineItemDetailsDialog";
 export default {
   props: [
     "lineItem",
-    "label",
-    "budgetedParsed",
-    "totalExpenditures",
-    "spendingProgress",
     "screenSize",
     "deleteShowing",
+    "totalExpenditures",
+    "spendingProgress"
   ],
 
   components: {
@@ -91,6 +81,8 @@ export default {
         return false;
       }
     },
+
+    
   },
 
   filters: {

@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog">
     <template v-slot:activator="{ on, attrs }">
-      <v-icon v-bind="attrs" v-on="on" small class="ml-2">
+      <v-icon v-bind="attrs" v-on="on" small :dark="purpose === 'Label'" class="ml-2">
         mdi-square-edit-outline
       </v-icon>
     </template>

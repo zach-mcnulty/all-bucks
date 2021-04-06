@@ -10,54 +10,15 @@
       :style="showDelete ? { right: deleteBtnWidth } : { right: '0px' }"
     >
       <v-col cols="12">
-        <!-- <v-container fluid class="pa-0">
-          <v-row
-            class="d-flex"
-            v-touch="{
-              left: () => (showDelete = true),
-              right: () => (showDelete = false),
-            }"
-          >
-            <v-col cols="8" class="d-flex mx-0 py-0"> -->
-
-        <line-item-details-activator
+        <line-item-details
           :lineItem="lineItem"
-          :budgetedParsed="budgetedParsed"
           :totalExpenditures="totalExpenditures"
+          :spendingProgress="spendingProgress"
+          :deleteShowing="showDelete"
           :screenSize="screenSize"
           v-on="$listeners"
-          :deleteShowing="showDelete"
         >
-        </line-item-details-activator>
-
-        <!-- <log-expenditure-dialog
-                :screenSize="screenSize"
-                :iconToggle="iconToggle"
-                v-on="$listeners"
-              ></log-expenditure-dialog>
-            </v-col>
-            <v-col class="d-flex justify-end py-0">
-              {{ lineItem.budgeted | currency }}
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col class="d-flex justify-center py-0">
-              <v-progress-linear
-                :value="spendingProgress"
-                :color="
-                  spendingProgress <= 100
-                    ? spendingProgress >= 75
-                      ? 'yellow'
-                      : 'green'
-                    : 'red'
-                "
-                background-color="grey lighten-3"
-                rounded
-                class="mt-2"
-              ></v-progress-linear>
-            </v-col>
-          </v-row>
-        </v-container> -->
+        </line-item-details>
       </v-col>
       <v-col
         cols="2"
@@ -76,16 +37,13 @@
 
 <script>
 //import LogExpenditureDialog from "./LogExpenditureDialog";
-import LineItemDetailsActivator from "./LineItemDetailsActivator";
-
-import { parse } from "vue-currency-input";
+import LineItemDetails from "./LineItemDetails";
 
 export default {
   props: ["lineItem"],
 
   components: {
-    //LogExpenditureDialog,
-    LineItemDetailsActivator,
+    LineItemDetails,
   },
 
   data() {
@@ -97,23 +55,21 @@ export default {
   },
 
   computed: {
-    budgetedParsed() {
-      return parse(this.budgeted, this.vCurrencyOptions);
-    },
-    totalExpenditures() {
-      return this.lineItem.expenditures
-        .map((expenditure) => expenditure.spent)
-        .reduce((accumulator, amount) => accumulator + amount, 0);
-    },
-    spendingProgress() {
-      return (this.totalExpenditures / this.lineItem.budgeted) * 100;
-    },
     screenSize() {
       return this.$vuetify.breakpoint.name;
     },
     deleteBtnWidth() {
       return String((this.$vuetify.breakpoint.width / 12) * 2) + "px";
     },
+
+    totalExpenditures() {
+      return this.lineItem.expenditures
+        .map(e => e.spent)
+        .reduce((a, b) => a + b, 0);
+    },
+    spendingProgress() {
+      return this.totalExpenditures / this.lineItem.budgeted * 100;
+    }
   },
 
   methods: {

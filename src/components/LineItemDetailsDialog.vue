@@ -9,11 +9,21 @@
         class="d-flex justify-space-between align-center px-3"
         style="width: 100%"
       >
-        <div class="white--text font-weight-light">Line Item Details</div>
+        <div>
+          <div class="white--text font-weight-light">
+            
+            <span> {{ lineItem.label }} Details</span>
+            <edit-details-dialog
+              :purpose="'Label'"
+              v-on="$listeners"
+            ></edit-details-dialog>
+          </div>
+        </div>
+
         <v-spacer></v-spacer>
         <v-card-actions class="pa-0">
           <v-btn
-            @click="[deleteOption = false, $emit('cancel')]"
+            @click="[(deleteOption = false), $emit('cancel')]"
             text
             dark
             class="d-flex justify-end pr-0"
@@ -25,23 +35,8 @@
 
     <v-container fluid>
       <v-row class="d-flex align-center">
-        <v-col>
+        <v-col :class="xxs ? 'pa-2' : ''">
           <div class="d-flex flex-column justify-center align-start">
-            <div class="d-flex">
-              <div style="font-size: 0.9rem">Label</div>
-              <edit-details-dialog
-                :purpose="'Label'"
-                v-on="$listeners"
-              ></edit-details-dialog>
-            </div>
-            <span class="text-h5 font-weight-light">{{
-              lineItem.label | trimmer
-            }}</span>
-          </div>
-        </v-col>
-
-        <v-col>
-          <div class="d-flex flex-column justify-center align-center">
             <div class="d-flex">
               <div style="font-size: 0.9rem">Budgeted</div>
               <edit-details-dialog
@@ -49,27 +44,40 @@
                 v-on="$listeners"
               ></edit-details-dialog>
             </div>
-            <div class="text-h5 font-weight-light">
+            <div class="text-h6 font-weight-light">
               {{ lineItem.budgeted | currency }}
             </div>
           </div>
         </v-col>
 
-        <v-col class="d-flex flex-column justify-center align-end">
-          <span style="font-size: 0.9rem">Remaining</span>
-          <span class="text-h5 font-weight-light">{{
-            remaining | currency
-          }}</span>
+        <v-col :class="xxs ? 'pa-2' : ''">
+          <div class="d-flex flex-column justify-center align-center">
+            <div class="d-flex">
+              <div style="font-size: 0.9rem">Spent</div>
+            </div>
+            <span class="text-h6 font-weight-light">{{
+              totalExpenditures | currency
+            }}</span>
+          </div>
+        </v-col>
+
+        <v-col :class="xxs ? 'pa-2' : ''">
+          <div class="d-flex flex-column justify-center align-end">
+            <span style="font-size: 0.9rem">Remaining</span>
+            <span
+              class="text-h6 font-weight-light"
+              :class="remaining < 0 ? 'red--text' : ''"
+              >{{ remaining | currency }}</span
+            >
+          </div>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col
-          @click="deleteOption = !deleteOption"
-        >
-          <v-btn v-if="!deleteOption" block disabled
-            >Tap to Activate Delete Option</v-btn
-          >
-          <v-btn v-else block dark color="error" elevation="0">Delete Line Item</v-btn>
+      <v-row class="d-flex">
+        <v-col class="pr-2">
+          <v-btn block dark color="error">Delete</v-btn>
+        </v-col>
+        <v-col class="pl-2">
+          <v-btn block dark>Update Label</v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -108,7 +116,7 @@ import LogExpenditureDialog from "./LogExpenditureDialog.vue";
 import ExpendituresList from "./ExpendituresList.vue";
 
 export default {
-  props: ["lineItem", "budgetedParsed", "totalExpenditures", "screenSize"],
+  props: ["lineItem", "totalExpenditures", "screenSize"],
 
   components: {
     ExpendituresList,
@@ -125,15 +133,16 @@ export default {
   },
 
   computed: {
-    spendingProgress() {
-      if (this.lineItem.budgeted) {
-        return (this.totalExpenditures / this.lineItem.budgeted) * 100;
-      } else {
-        return this.totalExpenditures ? 101 : 0;
-      }
-    },
     remaining() {
       return this.lineItem.budgeted - this.totalExpenditures;
+    },
+
+    xxs() {
+      if (this.$vuetify.breakpoint.width < 375) {
+        return true;
+      } else {
+        return false;
+      }
     },
   },
 
@@ -145,8 +154,8 @@ export default {
       });
     },
     trimmer(str) {
-      if (str.length > 5) {
-        return str.slice(0, 5) + "...";
+      if (str.length > 4) {
+        return str.slice(0, 4) + "...";
       } else {
         return str;
       }
