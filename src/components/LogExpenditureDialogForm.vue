@@ -17,7 +17,7 @@
                   amountParsed,
                   notes,
                 }),
-                clearInputs(),
+                purpose === 'Log' ? clearInputs() : '',
               ]
             "
           >
@@ -42,7 +42,11 @@
               autocomplete="off"
             ></v-textarea>
             <div class="d-flex flex-column">
-              <v-btn @click="[$emit('cancel'), clearInputs()]" block
+              <v-btn
+                @click="
+                  [$emit('cancel'), purpose === 'Log' ? clearInputs() : '']
+                "
+                block
                 >Cancel</v-btn
               >
               <v-btn type="submit" block color="primary" class="mt-3"
@@ -62,13 +66,19 @@
 import { parse } from "vue-currency-input";
 
 export default {
-  props: ["purpose", "screenSize"],
+  props: [
+    "purpose",
+    "screenSize",
+    "existingMerchant",
+    "existingAmount",
+    "existingNotes",
+  ],
 
   data() {
     return {
-      merchant: "",
-      amount: "",
-      notes: "",
+      merchant: this.existingMerchant || "",
+      amount: this.existingAmount || "",
+      notes: this.existingNotes || "",
 
       vCurrencyOptions: {
         locale: "en",
@@ -83,7 +93,7 @@ export default {
 
   computed: {
     amountParsed() {
-      return parse(this.amount, this.vCurrencyOptions);
+      return parse(String(this.amount), this.vCurrencyOptions);
     },
   },
 

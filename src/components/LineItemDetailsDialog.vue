@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card class="grey lighten-3">
     <v-card-title
       class="green pa-0"
       id="lineItemDetailsDialogTitle"
@@ -11,7 +11,6 @@
       >
         <div>
           <div class="white--text font-weight-light">
-            
             <span> {{ lineItem.label }} Details</span>
             <edit-details-dialog
               :purpose="'Label'"
@@ -33,7 +32,7 @@
       </div>
     </v-card-title>
 
-    <v-container fluid>
+    <v-container fluid class="white">
       <v-row class="d-flex align-center">
         <v-col :class="xxs ? 'pa-2' : ''">
           <div class="d-flex flex-column justify-center align-start">
@@ -93,33 +92,35 @@
           ></log-expenditure-dialog>
         </v-col>
       </v-row>
+      <v-row>
+        <v-col class="pa-0">
+          <expenditure
+            v-for="(expenditure, i) in lineItem.expenditures"
+            :key="i"
+            :expenditure="expenditure"
+            :screenSize="screenSize"
+          >
+          </expenditure>
+        </v-col>
+      </v-row>
     </v-container>
 
-    <div v-if="lineItem.expenditures.length">
-      <expenditures-list
-        v-for="(expenditure, i) in lineItem.expenditures"
-        :key="i"
-        :expenditure="expenditure"
-        :screenSize="screenSize"
-      >
-      </expenditures-list>
-    </div>
-    <div v-else class="d-flex justify-center">
+    <!-- <div v-else class="d-flex justify-center">
       <div class="text--disabled">No expenditures logged</div>
-    </div>
+    </div> -->
   </v-card>
 </template>
 
 <script>
 import EditDetailsDialog from "./EditDetailsDialog.vue";
 import LogExpenditureDialog from "./LogExpenditureDialog.vue";
-import ExpendituresList from "./ExpendituresList.vue";
+import Expenditure from "./Expenditure.vue";
 
 export default {
   props: ["lineItem", "totalExpenditures", "screenSize"],
 
   components: {
-    ExpendituresList,
+    Expenditure,
     EditDetailsDialog,
     LogExpenditureDialog,
   },

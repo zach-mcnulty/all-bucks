@@ -1,8 +1,8 @@
 <template>
-  <v-container fluid @click="dialog=true" class="grey lighten-3 my-1">
+  <v-container fluid @click="dialog=true" class="white my-1">
     <v-row>
-      <v-col cols="2">{{ expenditure.timeLogged | date }}</v-col>
-      <v-col cols="6"
+      <v-col cols="3">{{ expenditure.timeLogged | date }}</v-col>
+      <v-col cols="5"
         ><span v-if="expenditure.merchant">{{ expenditure.merchant }}</span>
         <span v-else class="text--disabled">No merchant name</span></v-col
       >
@@ -13,7 +13,10 @@
 
     <v-dialog v-model="dialog" fullscreen transition="dialog-bottom-transition">
       <log-expenditure-dialog-form
-      :purpose="'edit'" 
+        :purpose="'edit'"
+        :existingMerchant="expenditure.merchant"
+        :existingAmount="expenditure.spent"
+        :existingNotes="expenditure.notes"
         :screenSize="screenSize"
         @expenditure-submitted="
           [$emit('expenditure-submitted', $event), (dialog = false)]
