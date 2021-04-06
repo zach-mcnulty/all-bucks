@@ -13,7 +13,7 @@
         <v-spacer></v-spacer>
         <v-card-actions class="pa-0">
           <v-btn
-            @click="$emit('cancel')"
+            @click="[deleteOption = false, $emit('cancel')]"
             text
             dark
             class="d-flex justify-end pr-0"
@@ -60,6 +60,16 @@
           <span class="text-h5 font-weight-light">{{
             remaining | currency
           }}</span>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col
+          @click="deleteOption = !deleteOption"
+        >
+          <v-btn v-if="!deleteOption" block disabled
+            >Tap to Activate Delete Option</v-btn
+          >
+          <v-btn v-else block dark color="error" elevation="0">Delete Line Item</v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -110,6 +120,7 @@ export default {
     return {
       editingLabel: false,
       editingBudgeted: false,
+      deleteOption: false,
     };
   },
 

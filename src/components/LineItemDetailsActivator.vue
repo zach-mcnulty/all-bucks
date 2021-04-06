@@ -9,7 +9,7 @@
     >
       <template v-slot:activator="{ on, attrs }">
         <span v-bind="attrs" v-on="on">
-          {{label}}
+          {{lineItem.label}}
         </span>
       </template>
       <line-item-details-dialog

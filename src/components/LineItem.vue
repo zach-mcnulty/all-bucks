@@ -1,48 +1,45 @@
 <template>
-  <v-container fluid class="pa-0 my-2" style="overflow: hidden">
-    <v-row class="d-flex flex-nowrap">
+  <v-container fluid class="pa-0 my-6">
+    <v-row
+      class="d-flex flex-nowrap slide"
+      style="position: relative"
+      :style="showDelete ? { right: deleteBtnWidth } : {right: '0px'}"
+    >
       <v-col
-        :cols="!swipedLeft ? 12 : 10"
-        class="slide"
-        @transitionstart="updateLabel($event.type)"
-        @transitionend="updateLabel($event.type)"
+        cols="12"
       >
         <v-container fluid class="pa-0">
           <v-row
             class="d-flex"
             v-touch="{
-              left: () => (swipedLeft = true),
-              right: () => (swipedLeft = false),
+              left: () => (showDelete = true),
+              right: () => (showDelete = false),
             }"
           >
-            <v-col>
-              <div class="d-flex">
-                <!-- LineItemDetailsActivator displays lineItem label,
+            <v-col cols="8" class="d-flex mx-0 py-0">
+              <!-- LineItemDetailsActivator displays lineItem label,
             and label activates LineItemDetailsDialog on click -->
-                <line-item-details-activator
-                  :lineItem="lineItem"
-                  :label="label"
-                  :budgetedParsed="budgetedParsed"
-                  :totalExpenditures="totalExpenditures"
-                  :screenSize="screenSize"
-                  :swipedLeft="swipedLeft"
-                  v-on="$listeners"
-                >
-                </line-item-details-activator>
+              <line-item-details-activator
+                :lineItem="lineItem"
+                :budgetedParsed="budgetedParsed"
+                :totalExpenditures="totalExpenditures"
+                :screenSize="screenSize"
+                v-on="$listeners"
+              >
+              </line-item-details-activator>
 
-                <log-expenditure-dialog
-                  :screenSize="screenSize"
-                  :iconToggle="iconToggle"
-                  v-on="$listeners"
-                ></log-expenditure-dialog>
-              </div>
+              <log-expenditure-dialog
+                :screenSize="screenSize"
+                :iconToggle="iconToggle"
+                v-on="$listeners"
+              ></log-expenditure-dialog>
             </v-col>
-            <v-col class="d-flex justify-end mr-3">
+            <v-col class="d-flex justify-end py-0">
               {{ lineItem.budgeted | currency }}
             </v-col>
           </v-row>
           <v-row>
-            <v-col class="d-flex justify-center align-center pt-1 mr-3">
+            <v-col class="d-flex justify-center py-0">
               <v-progress-linear
                 :value="spendingProgress"
                 :color="
@@ -54,24 +51,15 @@
                 "
                 background-color="grey lighten-3"
                 rounded
-                class="mb-1"
+                class="mt-2"
               ></v-progress-linear>
             </v-col>
           </v-row>
         </v-container>
       </v-col>
-      <v-col cols="2" class="pa-0">
-        <!-- In order to get the button to appear at the edge of the screen,
-        I had to eliminate the right padding on the Category component, and 
-        add padding back onto "PLANNED" at the top of each Category, to the 
-        budgeted column in LineItem, as well as the progress bar and to the
-        NewLineItemForm component-->
-        <button
-          type="button"
-          class="red fill-height d-flex justify-center align-center"
-          style="width: 100%"
-        >
-          <v-icon @click="$emit('delete-line-item')" medium dark class="mr-2"
+      <v-col cols="2" v-click-outside="hideDelete" class="d-flex justify-center pa-0">
+        <button type="button" class="red" style="height: 100%; width: 100%">
+          <v-icon @click="$emit('delete-line-item')" medium dark
             >mdi-delete</v-icon
           >
         </button>
@@ -98,8 +86,7 @@ export default {
     return {
       lineItemDetailsDialog: false,
       iconToggle: false,
-      swipedLeft: undefined,
-      label: this.lineItem.label,
+      showDelete: false
     };
   },
 
@@ -118,17 +105,15 @@ export default {
     screenSize() {
       return this.$vuetify.breakpoint.name;
     },
+    deleteBtnWidth() {
+      return String((this.$vuetify.breakpoint.width / 12) * 2) + "px";
+    },
   },
 
   methods: {
-    //updateLabel prevents label from wrapping when delete button is revealed
-    updateLabel(event) {
-      if (event === "transitionstart" && this.swipedLeft) {
-        if (this.label.length > 8) {
-          return this.label = this.label.slice(0, 8) + '...';
-        }
-      } else if (event === "transitionend" && !this.swipedLeft) {
-        return this.label = this.lineItem.label;
+    hideDelete() {
+      if (this.showDelete) {
+        return this.showDelete = false;
       }
     },
     closeBudgetedForm() {
