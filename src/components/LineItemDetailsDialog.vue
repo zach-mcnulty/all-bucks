@@ -1,35 +1,35 @@
 <template>
-  <v-card class="grey lighten-3">
+  <v-card class="grey lighten-3" style="position:fixed;">
+    <!-- Position:Fixed on card allows fullscreen dialog to remain still
+    in case user scrolls in Expenditure delete button from offscreen -->
     <v-card-title
       class="green pa-0"
+      dense
       id="lineItemDetailsDialogTitle"
-      :style="screenSize === 'xs' ? 'height:56px;' : 'height:64px;'"
     >
-      <div
-        class="d-flex justify-space-between align-center px-3"
-        style="width: 100%"
-      >
-        <div>
-          <div class="white--text font-weight-light">
-            <span> {{ lineItem.label }} Details</span>
+      <v-container fluid>
+        <v-row>
+          <v-col cols="10" class="d-flex align-center">
+            <div class="white--text text-truncate">{{ lineItem.label }} Details</div>
             <edit-details-dialog
               :purpose="'Label'"
               v-on="$listeners"
             ></edit-details-dialog>
-          </div>
-        </div>
+          </v-col>
 
-        <v-spacer></v-spacer>
-        <v-card-actions class="pa-0">
-          <v-btn
-            @click="[(deleteOption = false), $emit('cancel')]"
-            text
-            dark
-            class="d-flex justify-end pr-0"
-            ><v-icon large>mdi-chevron-down</v-icon></v-btn
-          >
-        </v-card-actions>
-      </div>
+          <v-col cols="2">
+            <v-card-actions class="pa-0">
+              <v-btn
+                @click="[$emit('cancel')]"
+                text
+                dark
+                class="d-flex"
+                ><v-icon large>mdi-chevron-down</v-icon></v-btn
+              >
+            </v-card-actions>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-card-title>
 
     <v-container fluid class="white">
@@ -71,14 +71,6 @@
           </div>
         </v-col>
       </v-row>
-      <v-row class="d-flex">
-        <v-col class="pr-2">
-          <v-btn block dark color="error">Delete</v-btn>
-        </v-col>
-        <v-col class="pl-2">
-          <v-btn block dark>Update Label</v-btn>
-        </v-col>
-      </v-row>
     </v-container>
 
     <v-container fluid>
@@ -86,22 +78,26 @@
         <v-col class="d-flex align-center">
           <span class="font-weight-bold">Expenditures</span>
           <log-expenditure-dialog
-            :purpose="'log'"
             :screenSize="screenSize"
             v-on="$listeners"
           ></log-expenditure-dialog>
         </v-col>
       </v-row>
       <v-row>
-        <v-col class="pa-0">
+        <v-col v-if="lineItem.expenditures.length" class="pa-0">
           <expenditure
             v-for="(expenditure, i) in lineItem.expenditures"
             :key="i"
             :expenditure="expenditure"
             :screenSize="screenSize"
+            @expenditure-edited="$emit('expenditure-edited', { ...$event, i })"
+            @delete-expenditure="$emit('delete-expenditure', {...$event, i })"
           >
           </expenditure>
         </v-col>
+        <v-col v-else class="d-flex justify-center text--disabled"
+          >No Expenditures Logged</v-col
+        >
       </v-row>
     </v-container>
 

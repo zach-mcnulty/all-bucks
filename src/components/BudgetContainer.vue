@@ -20,8 +20,10 @@
           updateLineItemDetails({ $event, lineItem })
         "
         @expenditure-submitted="logExpenditure({ ...$event, lineItem })"
-        @details-updated="updateDetails({...$event, lineItem})"
-        @delete-line-item="deleteLineItem({category, i})"
+        @expenditure-edited="editExpenditure({ ...$event, lineItem })"
+        @details-updated="updateDetails({ ...$event, lineItem })"
+        @delete-line-item="deleteLineItem({ category, i })"
+        @delete-expenditure="deleteExpenditure({ ...$event, lineItem })"
       ></line-item>
     </category>
   </v-container>
@@ -74,24 +76,37 @@ export default {
         new Expenditure(merchant, amountParsed, notes)
       );
     },
-    updateDetails({input, purpose, lineItem}) {
+    editExpenditure({ merchant, amountParsed, notes, i, lineItem }) {
+      let expenditure = lineItem.expenditures[i];
+
+      expenditure.merchant = merchant;
+      expenditure.spent = amountParsed;
+      expenditure.notes = notes;
+
+      return;
+    },
+    updateDetails({ input, purpose, lineItem }) {
       if (purpose === "Label") {
-        return lineItem.label = input;
+        return (lineItem.label = input);
       } else if (purpose === "Budgeted") {
-        return lineItem.budgeted = input;
+        return (lineItem.budgeted = input);
       } else {
-        return this.budget.income = input;
+        return (this.budget.income = input);
       }
     },
-    deleteLineItem({category, i}) {
-      let revisedLineItems;
-
-      let lineItems_upTo = category.lineItems.splice(0, i);
-      let lineItems_after = category.lineItems.splice(i + 1);
-
-      revisedLineItems = lineItems_upTo.concat(lineItems_after);
+    deleteLineItem({ category, i }) {
+      let revisedLineItems = category.lineItems
+        .splice(0, i)
+        .concat(category.lineItems.splice(i + 1));
 
       return (category.lineItems = revisedLineItems);
+    },
+    deleteExpenditure({i, lineItem}) {
+      let revisedExpenditures = lineItem.expenditures
+        .splice(0, i)
+        .concat(lineItem.expenditures.splice(i + 1));
+
+      return lineItem.expenditures = revisedExpenditures;
     },
   },
 };

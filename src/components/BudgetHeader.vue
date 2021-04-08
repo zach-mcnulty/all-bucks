@@ -4,18 +4,18 @@
     style="position: sticky; top: 56px"
   >
     <v-row class="d-flex space-around">
-      <v-col class="d-flex justify-center align-center">
+      <v-col class="d-flex justify-center align-center" :class="breakPoint.width < 375 ? 'px-0' : ''">
         <div
           class="d-flex flex-column align-center"
         >
-          <div class="text-h6">{{ budget.income | currency }}</div>
+          <div :class="breakPoint.width < 375 ? 'body-1 font-weight-bold' : 'text-h5'">{{ budget.income | currency }}</div>
           <div class="d-flex">
             <span class="caption text-uppercase">Income</span>
             <edit-details-dialog :purpose="'Income'" v-on="$listeners"></edit-details-dialog>
           </div>
         </div>
       </v-col>
-      <v-col class="d-flex justify-center align-center">
+      <v-col class="d-flex justify-center align-center" :class="breakPoint.width < 375 ? 'px-0' : ''">
         <v-progress-circular
           :value="spendingProgress"
           :color="
@@ -27,15 +27,15 @@
           "
           rotate="-90"
           background-color="grey lighten-3"
-          size="100"
+          :size="breakPoint.width < 375 ? '80' : '100'"
           width="16"
         ></v-progress-circular>
       </v-col>
-      <v-col class="d-flex flex-column justify-center align-center">
+      <v-col class="d-flex flex-column justify-center align-center" :class="breakPoint.width < 375 ? 'px-0' : ''">
         <div class="d-flex flex-column align-center">
           <div
             :style="budgeted > budget.income ? 'color:red;' : ''"
-            class="text-h6"
+            :class="breakPoint.width < 375 ? 'body-1 font-weight-bold' : 'text-h5'"
           >
             {{ budgeted | currency }}
           </div>
@@ -101,8 +101,12 @@ export default {
       } else {
         return this.spent ? 101 : 0;
       }
-      
     },
+
+    breakPoint() {
+      return this.$vuetify.breakpoint;
+    }
+    
   },
 
   methods: {

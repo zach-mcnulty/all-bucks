@@ -11,20 +11,13 @@
         <v-col>
           <v-form
             @submit.prevent="
-              [
-                $emit('expenditure-submitted', {
-                  merchant,
-                  amountParsed,
-                  notes,
-                }),
-                purpose === 'Log' ? clearInputs() : '',
-              ]
+              [emitExpenditureDetails(), purpose === 'log' ? clearInputs() : '']
             "
           >
             <v-text-field
               v-model="merchant"
               label="Merchant"
-              autofocus
+              :autofocus="purpose === 'log'"
               autocomplete="off"
             ></v-text-field>
             <v-text-field
@@ -44,7 +37,7 @@
             <div class="d-flex flex-column">
               <v-btn
                 @click="
-                  [$emit('cancel'), purpose === 'Log' ? clearInputs() : '']
+                  [$emit('cancel'), purpose === 'log' ? clearInputs() : '']
                 "
                 block
                 >Cancel</v-btn
@@ -98,6 +91,19 @@ export default {
   },
 
   methods: {
+    emitExpenditureDetails() {
+      let merchant = this.merchant,
+          amountParsed = this.amountParsed,
+          notes = this.notes;
+
+      let expenditureDetails = {merchant, amountParsed, notes};
+
+      if (this.purpose === 'log') {
+        return this.$emit('expenditure-submitted', expenditureDetails);
+      } else if (this.purpose === 'edit') {
+        return this.$emit('expenditure-edited', expenditureDetails);
+      }
+    },
     clearInputs() {
       this.merchant = "";
       this.amount = "";

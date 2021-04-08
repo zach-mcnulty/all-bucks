@@ -7,7 +7,7 @@
       }"
       class="d-flex flex-nowrap slide"
       style="position: relative"
-      :style="showDelete ? { right: deleteBtnWidth } : { right: '0px' }"
+      :style="showDelete ? { right: twoColumnsWidth } : { right: '0px' }"
     >
       <v-col cols="12">
         <line-item-details
@@ -58,7 +58,7 @@ export default {
     screenSize() {
       return this.$vuetify.breakpoint.name;
     },
-    deleteBtnWidth() {
+    twoColumnsWidth() {
       return String((this.$vuetify.breakpoint.width / 12) * 2) + "px";
     },
 

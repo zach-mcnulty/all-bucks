@@ -11,14 +11,15 @@
       <v-container v-bind="attrs" v-on="on" fluid class="pa-0">
         <v-row class="d-flex">
           <v-col cols="8" class="d-flex mx-0 py-0">
-            <div>{{ lineItem.label }}</div>
+            <div class="text-truncate">{{ lineItem.label }}</div>
             <log-expenditure-dialog
+              :purpose="'log'"
               :disable="disabled"
               :screenSize="screenSize"
               v-on="$listeners"
             ></log-expenditure-dialog>
           </v-col>
-          <v-col class="d-flex justify-end py-0">
+          <v-col cols="4" class="d-flex justify-end py-0">
             {{ lineItem.budgeted | currency }}
           </v-col>
         </v-row>
